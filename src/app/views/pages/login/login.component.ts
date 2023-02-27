@@ -14,14 +14,16 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private _router: Router
-  ) {
+    private _router: Router  ) {
     
    }
 
   async login(){
-    const creds = await signInWithPopup(firebaseAuth,new GoogleAuthProvider());
-    console.log(creds);
+    const creds = await signInWithPopup(firebaseAuth,new GoogleAuthProvider()).then((result)=>{
+      const credentials = GoogleAuthProvider.credentialFromResult(result);
+      const token = credentials?.accessToken;
+      token && localStorage.setItem('auth-token', token);
+    })
   }
   check(){
     const auth = getAuth();
@@ -42,5 +44,10 @@ export class LoginComponent {
     }else{
       console.log('please login')
     }
+  }
+  test(){
+    this.authService.test(getAuth()).subscribe(res=>{
+      console.log(res)
+    })
   }
 }

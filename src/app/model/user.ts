@@ -1,5 +1,4 @@
-interface User{
-    displayName: String;
+export interface User{
     oAuthToken: String;
-    photoURL: string;
+    uid: string;
 }
