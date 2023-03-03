@@ -1,4 +1,5 @@
 export interface User{
-    oAuthToken: String;
-    uid: string;
+    name: string;
+    photo: string;
+    email: string;
 }

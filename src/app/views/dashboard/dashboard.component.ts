@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
+import {User} from '../../model/user';
+import { getAuth } from 'firebase/auth';
 
 interface IUser {
   name: string;
@@ -22,7 +25,13 @@ interface IUser {
   styleUrls: ['dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private chartsData: DashboardChartsData) {
+
+  user = {};
+
+  constructor(
+    private chartsData: DashboardChartsData,
+    private _router: Router
+    ) {
   }
 
   public users: IUser[] = [
@@ -113,6 +122,18 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initCharts();
+    const token = localStorage.getItem('auth-token');
+    if (token){
+      console.log('token found');
+      const auth = getAuth();
+      this.user = {
+        name: auth.currentUser?.displayName,
+        photoUrl: auth.currentUser?.photoURL
+      }
+    }else{
+      this._router.navigate(['login']);
+    }
+    console.log(this.user)
   }
 
   initCharts(): void {

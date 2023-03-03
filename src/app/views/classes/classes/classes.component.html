@@ -1,0 +1,29 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+          <c-card-header>
+            <strong>Course List</strong> <small></small>
+          </c-card-header>
+          <c-card-body>
+            <table [hover]="true" cTable >
+                <thead>
+                <tr>
+                  <th scope="col">State</th>
+                  <th scope="col">Class Name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Section</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let course of courseList.courses">
+                  <th scope="row">{{course.courseState}}</th>
+                  <td>{{course.name}}</td>
+                  <td>{{course.descriptionHeading}}</td>
+                  <td>{{course.section}}</td>
+                </tr>
+                </tbody>
+              </table>
+          </c-card-body>
+        </c-card>
+      </c-col>
+</c-row>

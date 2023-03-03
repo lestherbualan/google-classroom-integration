@@ -16,15 +16,11 @@ export class GuessGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const auth = getAuth();
-    if(auth.currentUser){
-      console.log('can activate')
-      
-      return true;
-    }
-    console.log('cannot activate')
-    this._router.navigate(['dashboard']);
-    return false;
+    if(localStorage.getItem('auth-token')){
+      this._router.navigate(['dashboard']);
+      return false;
+    }    
+    return true;
   }
   
 }

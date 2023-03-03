@@ -18,11 +18,29 @@ export class LoginComponent {
     
    }
 
+  scopes = [
+   'https://www.googleapis.com/auth/classroom.courses',
+  'https://www.googleapis.com/auth/classroom.courses.readonly'
+    // add any other necessary scopes here
+  ];
+
   async login(){
-    const creds = await signInWithPopup(firebaseAuth,new GoogleAuthProvider()).then((result)=>{
+    const provider = new GoogleAuthProvider();
+
+    this.scopes.forEach(scope => provider.addScope(scope));
+
+    const creds = await signInWithPopup(firebaseAuth,provider).then( (result)=>{
       const credentials = GoogleAuthProvider.credentialFromResult(result);
+      console.log(credentials)
+      const auth = getAuth();
       const token = credentials?.accessToken;
+      if(localStorage.getItem('auth-token')){
+        localStorage.removeItem('auth-token')
+      }
       token && localStorage.setItem('auth-token', token);
+      this.getClass()
+      this._router.navigate(['dashboard'])
+      
     })
   }
   check(){
@@ -31,6 +49,8 @@ export class LoginComponent {
 
     if (user){
       console.log('logged in as: '+ user.displayName)
+      console.log(localStorage.getItem('auth-token'))
+      console.log(auth)
     }else{
       console.log('no user')
     }
@@ -40,6 +60,7 @@ export class LoginComponent {
     if (auth.currentUser){
       auth.signOut().then(res=>{
         console.log(res);
+        localStorage.removeItem('auth-token')
       })
     }else{
       console.log('please login')
@@ -47,6 +68,14 @@ export class LoginComponent {
   }
   test(){
     this.authService.test(getAuth()).subscribe(res=>{
+      console.log(res)
+    })
+  }
+  getClass(){
+    // this.authService.getCLass(getAuth()).subscribe(res=>{
+    //   console.log(res)
+    // })
+    this.authService.getCLass(getAuth()).subscribe(res=>{
       console.log(res)
     })
   }
