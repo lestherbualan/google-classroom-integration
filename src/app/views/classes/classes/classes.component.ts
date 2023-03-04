@@ -19,7 +19,9 @@ export class ClassesComponent implements OnInit {
       this.courseList = res;
       console.log(res)
     })
-   
+  }
+  courseDetail(data:any){
+    console.log(data)
   }
 
 }
