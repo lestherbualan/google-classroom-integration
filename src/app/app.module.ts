@@ -50,6 +50,9 @@ import { AuthGuard } from './guards/auth.guard';
 import { GuessGuard } from './guards/guess.guard';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 
+import { StoreModule } from '@ngrx/store';
+import { authUserReducer } from './store/reducer/auth-user.reducer';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
@@ -89,7 +92,8 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({authUser: authUserReducer})
   ],
   providers: [
     {

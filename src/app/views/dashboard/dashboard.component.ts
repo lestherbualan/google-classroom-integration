@@ -3,7 +3,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
-import {User} from '../../model/user';
+import {User} from '../../model/User';
 import { getAuth } from 'firebase/auth';
 
 interface IUser {
