@@ -18,6 +18,7 @@ export class HttpInterceptorService implements HttpInterceptorService{
     if (token) {
       const tokenizedReq = req.clone({ 
         headers: req.headers.set('Authorization', 'Bearer ' + token)
+          .set('Accept','application/json')
       });
 
       console.log('intercepter here'+tokenizedReq)

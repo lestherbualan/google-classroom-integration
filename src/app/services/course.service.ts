@@ -12,4 +12,12 @@ export class CourseService {
   getCourseList(data:any){
     return this.http.get(environment.googleAPIBaseUrl+ 'courses?key='+data.config.apiKey);
   }
+
+  getCourseDetail(data:any, auth){
+    return this.http.get(environment.googleAPIBaseUrl+ 'courses/'+data.id+'/courseWork?key='+auth.config.apiKey)
+  }
+
+  getCourseStudents(data:any, auth){
+    return this.http.get(environment.googleAPIBaseUrl+ 'courses/'+data.id+'/students?key='+auth.config.apiKey)
+  }
 }

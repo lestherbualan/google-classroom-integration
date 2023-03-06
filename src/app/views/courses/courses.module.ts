@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClassesComponent } from './classes/classes.component';
+import { CourseListComponent } from './course-list/course-list.component'
 import { RouterModule, Routes } from '@angular/router';
 import { DocsComponentsModule } from "../../../components/docs-components.module";
 
@@ -51,29 +51,30 @@ import { TablesComponent } from '../base/tables/tables.component';
 import { TooltipsComponent } from '../base/tooltips/tooltips.component';
 import { TabsComponent } from '../base/tabs/tabs.component';
 import { BaseRoutingModule } from '../base/base-routing.module';
+import { CourseDetailComponent } from './course-detail/course-detail.component';
 
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'course-list',
+    component: CourseListComponent,
     data: {
-      title: 'Base',
+      title: 'Course List',
     },
-    children: [
-      {
-        path: 'courses',
-        component: ClassesComponent,
-        data: {
-          title: 'Accordion',
-        },
-      }
-    ],
   },
+  {
+    path: 'detail/:data',
+    component: CourseDetailComponent,
+    data: {
+      title: 'Course Detail',
+    },
+  }
 ];
 
 @NgModule({
     declarations: [
-        ClassesComponent
+      CourseListComponent,
+      CourseDetailComponent
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -108,4 +109,4 @@ const routes: Routes = [
         TableModule,
     ]
 })
-export class ClassesModule { }
+export class CoursesModule { }

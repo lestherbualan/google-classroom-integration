@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { getAuth } from 'firebase/auth';
 import { CourseService } from '../../../services/course.service'
 
 @Component({
-  selector: 'app-classes',
-  templateUrl: './classes.component.html',
-  styleUrls: ['./classes.component.scss']
+  selector: 'app-course-list',
+  templateUrl: './course-list.component.html',
+  styleUrls: ['./course-list.component.scss']
 })
-export class ClassesComponent implements OnInit {
+export class CourseListComponent {
 
   courseList: any;
 
-  constructor(private _courseService: CourseService){
+  constructor(
+      private _courseService: CourseService,
+      private _router: Router
+    ){
 
   }
   ngOnInit(): void {
@@ -21,7 +25,8 @@ export class ClassesComponent implements OnInit {
     })
   }
   courseDetail(data:any){
-    console.log(data)
+    this._router.navigate(['/course/detail', data])
   }
+
 
 }

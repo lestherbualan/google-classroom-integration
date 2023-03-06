@@ -11,8 +11,8 @@ export const navItems: INavData[] = [
     }
   },
   {
-    name: 'Class',
-    url: '/classes/courses',
+    name: 'Course',
+    url: '/course/course-list',
     iconComponent: { name: 'cil-speedometer' },
     badge: {
       color: 'info',

@@ -4,6 +4,9 @@ import { firebaseAuth }from '../../../firebase/firebase.services';
 import { google } from 'googleapis';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { User } from 'src/app/model/User';
+import { setAuthUser } from 'src/app/store/action/auth-user.actions';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +16,28 @@ import { Router } from '@angular/router';
 export class LoginComponent {
 
   constructor(
-    private authService: AuthService,
-    private _router: Router  ) {
+      private authService: AuthService,
+      private _router: Router,
+      private _store: Store<{authUser: User}>
+    ) {
     
    }
 
+   user: User;
+
   scopes = [
-   'https://www.googleapis.com/auth/classroom.courses',
-  'https://www.googleapis.com/auth/classroom.courses.readonly'
+    'https://www.googleapis.com/auth/classroom.courses',
+    'https://www.googleapis.com/auth/classroom.courses.readonly',
+    
+    'https://www.googleapis.com/auth/classroom.coursework.students.readonly',
+    'https://www.googleapis.com/auth/classroom.coursework.me.readonly',
+    'https://www.googleapis.com/auth/classroom.coursework.students',
+    'https://www.googleapis.com/auth/classroom.coursework.me',
+
+    'https://www.googleapis.com/auth/classroom.rosters',
+    'https://www.googleapis.com/auth/classroom.rosters.readonly',
+    'https://www.googleapis.com/auth/classroom.profile.emails',
+    'https://www.googleapis.com/auth/classroom.profile.photos'
     // add any other necessary scopes here
   ];
 
@@ -38,7 +55,18 @@ export class LoginComponent {
         localStorage.removeItem('auth-token')
       }
       token && localStorage.setItem('auth-token', token);
-      this.getClass()
+
+      this.user = {
+        displayName: auth.currentUser.displayName,
+        photoUrl: auth.currentUser.photoURL,
+        email: auth.currentUser.email,
+        authToken: token,
+        apiKey: auth.config.apiKey
+      }
+      console.log(auth.config.apiKey)
+
+      this._store.dispatch(setAuthUser(this.user))
+
       this._router.navigate(['dashboard'])
       
     })
@@ -53,6 +81,7 @@ export class LoginComponent {
       console.log(auth)
     }else{
       console.log('no user')
+      console.log(auth)
     }
   }
   logout(){
@@ -67,8 +96,8 @@ export class LoginComponent {
     }
   }
   test(){
-    this.authService.test(getAuth()).subscribe(res=>{
-      console.log(res)
+    this._store.select('authUser').subscribe(authUse=>{
+      console.log(authUse)
     })
   }
   getClass(){

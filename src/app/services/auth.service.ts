@@ -30,10 +30,6 @@ export class AuthService {
     this.auth.signOut();
     return true;
   }
-  test(data: any):Observable<any>{
-    console.log(data)
-    return this.http.post(environment.apiBaseUrl+'api/v1/test',data);
-  }
   getCLass(data: any): Observable<any>{
     console.log(data)
     return this.http.get(environment.googleAPIBaseUrl+'courses?key='+data.config.apiKey);

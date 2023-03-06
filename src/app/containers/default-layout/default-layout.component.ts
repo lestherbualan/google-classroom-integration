@@ -19,12 +19,8 @@ export class DefaultLayoutComponent implements OnInit {
   User:any;
 
   constructor() {}
+  
   ngOnInit(): void {
-    this.User = getAuth();
-    console.log(this.User.currentUser)
+
   }
-  // get getAuthenticatedUser(){
-  //   console.log('get is here')
-  //   return this.User = getAuth();
-  // }
 }

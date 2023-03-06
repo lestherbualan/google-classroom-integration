@@ -4,6 +4,9 @@ import { Router, NavigationEnd } from '@angular/router';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import { Title } from '@angular/platform-browser';
+import { User } from './model/User';
+import { Store } from '@ngrx/store';
+import { InitialService } from './services/initial.service'
 
 @Component({
   selector: 'app-root',
@@ -15,7 +18,9 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private titleService: Title,
-    private iconSetService: IconSetService
+    private iconSetService: IconSetService,
+    private _store: Store<{authUser: User}>,
+    private initService: InitialService
   ) {
     titleService.setTitle(this.title);
     // iconSet singleton
@@ -23,6 +28,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initService.initializeState();
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;

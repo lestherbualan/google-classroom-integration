@@ -29,9 +29,9 @@ const routes: Routes = [
           import('./views/dashboard/dashboard.module').then((m) => m.DashboardModule)
       },
       {
-        path: 'classes',
+        path: 'course',
         loadChildren: () =>
-          import('./views/classes/classes.module').then((m) => m.ClassesModule)
+          import('./views/courses/courses.module').then((m) => m.CoursesModule)
       },
       {
         path: 'theme',
@@ -108,7 +108,7 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
-  {path: '**', redirectTo: 'dashboard'}
+  // {path: '**', redirectTo: 'dashboard'}
 ];
 
 @NgModule({

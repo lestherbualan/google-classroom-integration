@@ -9,6 +9,6 @@ export const authUserReducer = createReducer(
     on(setAuthUser, setAuthUserFn)
   );
   
-  function setAuthUserFn(state: User, action: { payload: User; }) {
-      return action.payload;
-  }
+function setAuthUserFn(state: User, action: User) { 
+    return action;
+}

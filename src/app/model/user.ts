@@ -1,6 +1,7 @@
 export interface User{
-    name: string;
-    photo: string;
+    displayName: string;
+    photoUrl: string;
     email: string;
-    token: string;
+    authToken: string;
+    apiKey: string;
 }
