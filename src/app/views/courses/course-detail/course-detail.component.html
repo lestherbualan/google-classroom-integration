@@ -41,7 +41,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let student of students?.students || []" class="pointer" >
+                <tr *ngFor="let student of students?.students || []" class="pointer" (click)="studentProfile(student.userId)">
                   <th scope="row">{{student.profile.photoUrl}}</th>
                   <td>{{student.profile.name.fullName}}</td>
                   <td>{{student.profile.emailAddress}}</td>

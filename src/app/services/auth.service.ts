@@ -2,21 +2,56 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { getAuth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { firebaseAuth }from '../firebase/firebase.services';
+import { User } from '../model/User';
+import { setAuthUser } from '../store/action/auth-user.actions';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  user: User;
+
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private _store: Store<{authUser: User}>,
+    private _router: Router,
   ) { }
 
   auth = getAuth();
 
-  login(data: any):Observable<any>{
-    return this.http.post(environment.apiBaseUrl+'api/v1/login',data);
+  async login(scopes:any){
+    const provider = new GoogleAuthProvider();
+
+    scopes.forEach(scope => provider.addScope(scope));
+    
+    const creds =  await signInWithPopup(firebaseAuth,provider).then( (result)=>{
+      const credentials = GoogleAuthProvider.credentialFromResult(result);
+      console.log(credentials)
+      const auth = getAuth();
+      const token = credentials?.accessToken;
+      if(localStorage.getItem('auth-token')){
+        localStorage.removeItem('auth-token')
+      }
+      token && localStorage.setItem('auth-token', token);
+
+      this.user = {
+        displayName: auth.currentUser.displayName,
+        photoUrl: auth.currentUser.photoURL,
+        email: auth.currentUser.email,
+        authToken: token,
+        apiKey: auth.config.apiKey
+      }
+      console.log(auth.config.apiKey)
+
+      this._store.dispatch(setAuthUser(this.user))
+      this._router.navigate(['dashboard'])
+      
+    })
   }
 
   getAuthToken(){

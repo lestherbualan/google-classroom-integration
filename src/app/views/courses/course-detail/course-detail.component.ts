@@ -35,4 +35,11 @@ export class CourseDetailComponent implements OnInit{
       console.log(res)
     })
   }
+
+  studentProfile(id:any){
+    console.log(id)
+    this._courseService.getCourseStudentProfile({id},getAuth()).subscribe(res=>{
+      console.log(res);
+    })
+  }
 }
