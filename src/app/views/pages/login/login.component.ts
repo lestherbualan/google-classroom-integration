@@ -30,12 +30,12 @@ export class LoginComponent implements OnInit{
   async ngOnInit(): Promise<void> {
     const auth = await getAuth();
     console.log(auth.currentUser)
-    if(auth.currentUser){
-      console.log('already loggedin')
-      this._router.navigate(['dashboard'])
-    }else{
-      this.login();
-    }
+    // if(auth.currentUser){
+    //   console.log('already loggedin')
+    //   this._router.navigate(['dashboard'])
+    // }else{
+    //   this.login();
+    // }
     
   }
 

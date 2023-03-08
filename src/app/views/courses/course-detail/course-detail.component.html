@@ -1,54 +1,82 @@
 <c-row ngPreserveWhitespaces>
-    <c-col xs="12">
-        <c-card class="mb-4">
-          <c-card-header>
-            <strong>Course Works</strong> <small></small>
-          </c-card-header>
-          <c-card-body>
-            <table [hover]="true" cTable >
-                <thead>
-                <tr>
-                  <th scope="col">Set Point</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Work Type</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let courseWork of courseWorks?.courseWork || []" class="pointer" >
-                  <th scope="row">{{courseWork.maxPoints}}</th>
-                  <td>{{courseWork.title}}</td>
-                  <td>{{courseWork.description}}</td>
-                  <td>{{courseWork.workType}}</td>
-                </tr>
-                </tbody>
-              </table>
-          </c-card-body>
-        </c-card>
-    </c-col>
-    <c-col xs="12">
-        <c-card class="mb-4">
-          <c-card-header>
-            <strong>Students</strong> <small></small>
-          </c-card-header>
-          <c-card-body>
-            <table [hover]="true" cTable >
-                <thead>
-                <tr>
-                  <th scope="col">Photo</th>
-                  <th scope="col">Full Name</th>
-                  <th scope="col">Email</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let student of students?.students || []" class="pointer" (click)="studentProfile(student.userId)">
-                  <th scope="row">{{student.profile.photoUrl}}</th>
-                  <td>{{student.profile.name.fullName}}</td>
-                  <td>{{student.profile.emailAddress}}</td>
-                </tr>
-                </tbody>
-              </table>
-          </c-card-body>
-        </c-card>
-    </c-col>
+  <p>Course ID: {{this.id}}</p>
+  <c-col xs="12" lg="12" md="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Course Grades</strong> <small></small>
+      </c-card-header>
+      <c-card-body>
+        <table [hover]="true" cTable >
+            <thead>
+            <tr *ngFor="let x of courseWorksName">
+              <th scope="col">{{x.courseWorkName}}</th>
+              <th scope="col">Grade</th>
+              <th scope="col">State</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let courseWork of courseWorks?.courseWork || []" class="pointer" (click)="getCourseWorkGrades(courseWork.id)" >
+              <th>{{courseWork.id}}</th>
+              <th scope="row">{{courseWork.maxPoints}}</th>
+              <td>{{courseWork.title}}</td>
+              <td>{{courseWork.description}}</td>
+              <td>{{courseWork.workType}}</td>
+            </tr>
+            </tbody>
+          </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col xs="12" lg="12" md="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Course Works</strong> <small></small>
+      </c-card-header>
+      <c-card-body>
+        <table [hover]="true" cTable >
+            <thead>
+            <tr>
+              <th scope="col">Set Point</th>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+              <th scope="col">Work Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let courseWork of courseWorks?.courseWork || []" class="pointer" (click)="getCourseWorkGrades(courseWork)" >
+              <th scope="row">{{courseWork.maxPoints}}</th>
+              <td>{{courseWork.title}}</td>
+              <td>{{courseWork.description}}</td>
+              <td>{{courseWork.workType}}</td>
+            </tr>
+            </tbody>
+          </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col xs="12" lg="12" md="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Students</strong> <small></small>
+      </c-card-header>
+      <c-card-body>
+        <table [hover]="true" cTable >
+            <thead>
+            <tr>
+              <th scope="col">Photo</th>
+              <th scope="col">Full Name</th>
+              <th scope="col">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let student of students?.students || []" class="pointer" (click)="studentProfile(student.userId)">
+              <th scope="row">{{student.profile.photoUrl}}</th>
+              <td>{{student.profile.name.fullName}}</td>
+              <td>{{student.profile.emailAddress}}</td>
+            </tr>
+            </tbody>
+          </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
 </c-row>

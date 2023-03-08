@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getAuth } from 'firebase/auth';
 import { CourseService } from 'src/app/services/course.service';
+import { StudentSubmission } from 'src/app/model/studentSubmission'
 
 @Component({
   selector: 'app-course-detail',
@@ -14,6 +15,8 @@ export class CourseDetailComponent implements OnInit{
 
   courseWorks: any;
   students: any;
+  studentSubmissions: any;
+  courseWorksName: any;
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -40,6 +43,13 @@ export class CourseDetailComponent implements OnInit{
     console.log(id)
     this._courseService.getCourseStudentProfile({id},getAuth()).subscribe(res=>{
       console.log(res);
+    })
+  }
+  getCourseWorkGrades(data:any){
+    let gradeKey = [];
+    const gradeInfo = [];
+    this._courseService.getCourseStudentsGrades({courseId: data.courseId, courseWorkId: data.id},getAuth()).subscribe(res=>{
+      console.log(res)
     })
   }
 }
