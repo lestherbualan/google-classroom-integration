@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { getAuth } from 'firebase/auth';
 import { CourseService } from 'src/app/services/course.service';
 import { StudentSubmission } from 'src/app/model/studentSubmission'
+import { Grade, Assignment } from 'src/app/model/Grade';
 
 @Component({
   selector: 'app-course-detail',
@@ -17,6 +18,11 @@ export class CourseDetailComponent implements OnInit{
   students: any;
   studentSubmissions: any;
   courseWorksName: any;
+  gradeTable: Grade[] = [];
+  gradeTableHeader: {
+    id: string;
+    name: string;
+  }[] = [];
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -50,25 +56,49 @@ export class CourseDetailComponent implements OnInit{
     const gradeInfo = [];
     this._courseService.getCourseStudentsGrades({courseId: data.courseId, courseWorkId: data.id},getAuth()).subscribe(res=>{
       console.log(res)
-      // this.studentSubmissions = res;
-      // console.log(this.students)
-      // console.log(this.courseWorks)
-      // this.studentSubmissions.studentSubmissions.forEach((submission,key) => {
-      //   this.courseWorks.courseWork.forEach(courseWork => {
-      //     if(submission.courseWorkId == courseWork.id){
-      //       //submission.courseWorkTitle = courseWork.title
-      //       this.studentSubmissions.studentSubmissions[key].courseWorkTitle = courseWork.title
-      //     }
-      //   });
-      //   this.students.students.forEach(student => {
-      //     if(submission.userId == student.userId){
-      //       //submission.courseWorkTitle = courseWork.title
-      //       this.studentSubmissions.studentSubmissions[key].studentName = student.profile.name.fullName
-      //       console.log('here')
-      //     }
-      //   });
-      // });
-      // console.log(this.studentSubmissions)
+      this.studentSubmissions = res;
+      console.log(this.students)
+      console.log(this.courseWorks)
+      
+      const courseWorkName = {};
+      this.courseWorks.courseWork.forEach(courseWork => {
+          courseWorkName[courseWork.id] = courseWork;
+      });
+      console.log(courseWorkName)
+      const studentAssignments = {};
+      this.studentSubmissions.studentSubmissions.forEach((submission,key) => {
+        if(!studentAssignments[submission.userId]){
+          studentAssignments[submission.userId] = [];
+        }
+        submission.courseWorkTitle = courseWorkName[submission.courseWorkId].title;
+        studentAssignments[submission.userId].push(submission);
+      });
+      this.students.students.forEach(student => {
+        const assignments = {};
+        studentAssignments[student.userId].forEach(studentAssignment => {
+          assignments[studentAssignment.id] = studentAssignment;
+        });
+        this.gradeTable.push({
+          id: student.userId,
+          name: student.profile.name.fullName,
+          overAllGrade: 0,
+          assignments: assignments
+        })
+      });
+      this.gradeTableHeader = Object.keys (this.gradeTable[0]?.assignments || {}).map(key =>{
+        return {
+          id: key,
+          name: (this.gradeTable[0].assignments[key] as any).courseWorkTitle
+        }
+
+      });
+      console.log()
+      console.log(this.gradeTable)
+      console.log(this.gradeTableHeader)
     })
+  }
+
+  getGrade(assignment: any){
+    return assignment.assignedGrade;
   }
 }

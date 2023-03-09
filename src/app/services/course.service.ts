@@ -23,6 +23,7 @@ export class CourseService {
   getCourseStudentProfile(data:any,auth){
     return this.http.get(environment.googleAPIBaseUrl+ 'userProfiles/'+data.id+'?key='+auth.config.apiKey)
   }
+  
   getCourseStudentsGrades(data:any,auth){
     return this.http.get(environment.googleAPIBaseUrl+ 'courses/'+data.courseId+'/courseWork/'+data.courseWorkId+'/studentSubmissions?key='+auth.config.apiKey)
   }

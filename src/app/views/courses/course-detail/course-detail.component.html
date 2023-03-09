@@ -8,17 +8,19 @@
       <c-card-body>
         <table [hover]="true" cTable >
             <thead>
-            <tr>
-              <th scope="col"></th>
-            </tr>
+              <tr>
+                <th scope="col">Student Name</th>
+                <th scope="col" *ngFor="let header of gradeTableHeader">
+                  {{header.name}}
+                </th>
+              </tr>
             </thead>
             <tbody>
-            <tr>
-              <th></th>
-              <th scope="row"></th>
-              <td></td>
-              <td></td>
-              <td></td>
+            <tr *ngFor="let student of gradeTable">
+              <td>{{student.name}}</td>
+              <td *ngFor="let header of gradeTableHeader">
+                {{getGrade(student.assignments[header.id])}}
+              </td>
             </tr>
             </tbody>
           </table>
@@ -68,7 +70,15 @@
             </thead>
             <tbody>
             <tr *ngFor="let student of students?.students || []" class="pointer" (click)="studentProfile(student.userId)">
-              <th scope="row">{{student.profile.photoUrl}}</th>
+              <th scope="row">
+                <!-- {{student.profile.photoUrl}} -->
+                <c-avatar
+                  cTextColor="primary"
+                  shape="rounded-1"
+                  size="md"
+                  src={{student.profile.photoUrl}}
+                />
+              </th>
               <td>{{student.profile.name.fullName}}</td>
               <td>{{student.profile.emailAddress}}</td>
             </tr>

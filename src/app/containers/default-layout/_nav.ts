@@ -13,11 +13,7 @@ export const navItems: INavData[] = [
   {
     name: 'Course',
     url: '/course/course-list',
-    iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-list' }
   },
   {
     title: true,

@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // CoreUI Modules
 import {
   AccordionModule,
+  AvatarModule,
   BadgeModule,
   BreadcrumbModule,
   ButtonModule,
@@ -83,6 +84,7 @@ const routes: Routes = [
         CommonModule,
         BaseRoutingModule,
         AccordionModule,
+        AvatarModule,
         BadgeModule,
         BreadcrumbModule,
         ButtonModule,

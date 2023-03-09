@@ -9,7 +9,7 @@ import { CourseService } from '../../../services/course.service'
   styleUrls: ['./course-list.component.scss']
 })
 export class CourseListComponent {
-
+  archiveState: boolean= true;
   courseList: any;
 
   constructor(
@@ -28,5 +28,7 @@ export class CourseListComponent {
     this._router.navigate(['/course/detail', data])
   }
 
-
+  getCheckState(event){
+    console.log(event.currentTarget.checked)
+  }
 }
