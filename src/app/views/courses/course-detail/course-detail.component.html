@@ -8,19 +8,17 @@
       <c-card-body>
         <table [hover]="true" cTable >
             <thead>
-            <tr *ngFor="let x of courseWorksName">
-              <th scope="col">{{x.courseWorkName}}</th>
-              <th scope="col">Grade</th>
-              <th scope="col">State</th>
+            <tr>
+              <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let courseWork of courseWorks?.courseWork || []" class="pointer" (click)="getCourseWorkGrades(courseWork.id)" >
-              <th>{{courseWork.id}}</th>
-              <th scope="row">{{courseWork.maxPoints}}</th>
-              <td>{{courseWork.title}}</td>
-              <td>{{courseWork.description}}</td>
-              <td>{{courseWork.workType}}</td>
+            <tr>
+              <th></th>
+              <th scope="row"></th>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             </tbody>
           </table>

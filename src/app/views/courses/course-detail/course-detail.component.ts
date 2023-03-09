@@ -50,6 +50,25 @@ export class CourseDetailComponent implements OnInit{
     const gradeInfo = [];
     this._courseService.getCourseStudentsGrades({courseId: data.courseId, courseWorkId: data.id},getAuth()).subscribe(res=>{
       console.log(res)
+      // this.studentSubmissions = res;
+      // console.log(this.students)
+      // console.log(this.courseWorks)
+      // this.studentSubmissions.studentSubmissions.forEach((submission,key) => {
+      //   this.courseWorks.courseWork.forEach(courseWork => {
+      //     if(submission.courseWorkId == courseWork.id){
+      //       //submission.courseWorkTitle = courseWork.title
+      //       this.studentSubmissions.studentSubmissions[key].courseWorkTitle = courseWork.title
+      //     }
+      //   });
+      //   this.students.students.forEach(student => {
+      //     if(submission.userId == student.userId){
+      //       //submission.courseWorkTitle = courseWork.title
+      //       this.studentSubmissions.studentSubmissions[key].studentName = student.profile.name.fullName
+      //       console.log('here')
+      //     }
+      //   });
+      // });
+      // console.log(this.studentSubmissions)
     })
   }
 }
