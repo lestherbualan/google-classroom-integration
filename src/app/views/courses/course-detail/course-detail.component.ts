@@ -36,13 +36,12 @@ export class CourseDetailComponent implements OnInit{
     this.apiKey = auth.config.apiKey;
     this._courseService.getCourseDetail({id: this.id, apiKey: this.apiKey},getAuth()).subscribe(res=>{
       this.courseWorks = res;
-      console.log(res)
+      this._courseService.getCourseStudents({id: this.id},getAuth()).subscribe(res=>{
+        this.students = res;
+      })
     })
 
-    this._courseService.getCourseStudents({id: this.id},getAuth()).subscribe(res=>{
-      this.students = res;
-      console.log(res)
-    })
+    
   }
 
   studentProfile(id:any){
@@ -54,12 +53,10 @@ export class CourseDetailComponent implements OnInit{
   getCourseWorkGrades(data:any){
     let gradeKey = [];
     const gradeInfo = [];
+    console.log(data)
     this._courseService.getCourseStudentsGrades({courseId: data.courseId, courseWorkId: data.id},getAuth()).subscribe(res=>{
-      console.log(res)
       this.studentSubmissions = res;
-      console.log(this.students)
-      console.log(this.courseWorks)
-      
+
       const courseWorkName = {};
       this.courseWorks.courseWork.forEach(courseWork => {
           courseWorkName[courseWork.id] = courseWork;
@@ -76,7 +73,7 @@ export class CourseDetailComponent implements OnInit{
       this.students.students.forEach(student => {
         const assignments = {};
         studentAssignments[student.userId].forEach(studentAssignment => {
-          assignments[studentAssignment.id] = studentAssignment;
+          assignments[studentAssignment.courseWorkId] = studentAssignment;
         });
         this.gradeTable.push({
           id: student.userId,
@@ -92,13 +89,12 @@ export class CourseDetailComponent implements OnInit{
         }
 
       });
-      console.log()
       console.log(this.gradeTable)
       console.log(this.gradeTableHeader)
     })
   }
 
   getGrade(assignment: any){
-    return assignment.assignedGrade;
+    return assignment?.assignedGrade;
   }
 }
