@@ -43,7 +43,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let courseWork of courseWorks?.courseWork || []" class="pointer" (click)="getCourseWorkGrades(courseWork)" >
+            <tr *ngFor="let courseWork of courseWorks?.courseWork || []" class="pointer" >
               <th scope="row">{{courseWork.maxPoints}}</th>
               <td>{{courseWork.title}}</td>
               <td>{{courseWork.description}}</td>

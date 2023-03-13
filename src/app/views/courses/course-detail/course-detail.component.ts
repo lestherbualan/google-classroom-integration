@@ -34,34 +34,59 @@ export class CourseDetailComponent implements OnInit{
     const auth = getAuth();
     this.id = this._route.snapshot.paramMap.get('data');
     this.apiKey = auth.config.apiKey;
-    this._courseService.getCourseDetail({id: this.id, apiKey: this.apiKey},getAuth()).subscribe(res=>{
-      this.courseWorks = res;
-      this._courseService.getCourseStudents({id: this.id},getAuth()).subscribe(res=>{
-        this.students = res;
-      })
-    })
-
     
+    this._courseService.getCourseStudents({id: this.id},getAuth()).toPromise().then(res=>{
+      this.students = res;
+
+
+      this.students.students.forEach(student => {
+        this.gradeTable.push({
+          id: student.userId,
+          name: student.profile.name.fullName,
+          overAllGrade: 0,
+          assignments: {}
+        })
+      });
+
+      console.log(this.gradeTable)
+
+      this._courseService.getCourseDetail({id: this.id, apiKey: this.apiKey},getAuth()).toPromise().then(res=>{
+        this.courseWorks = res;
+
+        const promises = [];
+        this.courseWorks.courseWork.forEach(courseWork => {
+          promises.push(this.getCourseWorkGrades(courseWork));
+        });
+
+
+        Promise.all(promises).then(() => {
+          this.gradeTableHeader = Object.keys (this.gradeTable[0]?.assignments || {}).map(key =>{
+            return {
+              id: key,
+              name: (this.gradeTable[0].assignments[key] as any).courseWorkTitle
+            }
+          });
+        });
+
+      });
+    });
   }
 
   studentProfile(id:any){
-    console.log(id)
     this._courseService.getCourseStudentProfile({id},getAuth()).subscribe(res=>{
-      console.log(res);
+      // console.log(res);
     })
   }
+
   getCourseWorkGrades(data:any){
-    let gradeKey = [];
-    const gradeInfo = [];
-    console.log(data)
-    this._courseService.getCourseStudentsGrades({courseId: data.courseId, courseWorkId: data.id},getAuth()).subscribe(res=>{
+    return this._courseService.getCourseStudentsGrades({courseId: data.courseId, courseWorkId: data.id},getAuth()).toPromise().then(res=>{
       this.studentSubmissions = res;
 
       const courseWorkName = {};
       this.courseWorks.courseWork.forEach(courseWork => {
           courseWorkName[courseWork.id] = courseWork;
       });
-      console.log(courseWorkName)
+
       const studentAssignments = {};
       this.studentSubmissions.studentSubmissions.forEach((submission,key) => {
         if(!studentAssignments[submission.userId]){
@@ -75,22 +100,19 @@ export class CourseDetailComponent implements OnInit{
         studentAssignments[student.userId].forEach(studentAssignment => {
           assignments[studentAssignment.courseWorkId] = studentAssignment;
         });
-        this.gradeTable.push({
-          id: student.userId,
-          name: student.profile.name.fullName,
-          overAllGrade: 0,
-          assignments: assignments
-        })
-      });
-      this.gradeTableHeader = Object.keys (this.gradeTable[0]?.assignments || {}).map(key =>{
-        return {
-          id: key,
-          name: (this.gradeTable[0].assignments[key] as any).courseWorkTitle
-        }
 
+        this.gradeTable = this.gradeTable.map(grade => {
+          if (grade.id == student.userId) {
+            grade.assignments = {
+              ...grade.assignments,
+              ...assignments
+            };
+          }
+          return grade;
+        });
       });
-      console.log(this.gradeTable)
-      console.log(this.gradeTableHeader)
+
+      return true;
     })
   }
 
