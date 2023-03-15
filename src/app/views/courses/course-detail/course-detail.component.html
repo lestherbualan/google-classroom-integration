@@ -2,11 +2,12 @@
   <p>Course ID: {{this.id}}</p>
   <c-col xs="12" lg="12" md="12">
     <c-card class="mb-4">
-      <c-card-header>
+      <c-card-header style="display: inline-flex;">
         <strong>Course Grades</strong> <small></small>
+        <button style="margin-left: auto;" (click)="exportToExcel()">Export</button>
       </c-card-header>
       <c-card-body>
-        <table [hover]="true" cTable >
+        <table [hover]="true" cTable id="grade-table">
             <thead>
               <tr>
                 <th scope="col">Student Name</th>

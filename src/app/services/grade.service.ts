@@ -7,8 +7,13 @@ export class GradeService {
 
   constructor() { }
 
-  getGradeRating(data:any){
-    console.log(data)
-    return data;
+  getGradeRating(gradeTable:any, coursework:any){
+    gradeTable.forEach(gradetable=> {
+      coursework.courseWork.forEach(coursework => {
+        
+      });  
+    });
+    
+    return gradeTable;
   }
 }

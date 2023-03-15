@@ -4,6 +4,8 @@ import { getAuth } from 'firebase/auth';
 import { CourseService } from 'src/app/services/course.service';
 import { StudentSubmission } from 'src/app/model/studentSubmission'
 import { Grade, Assignment } from 'src/app/model/Grade';
+import { GradeService} from 'src/app/services/grade.service';
+import * as xlsx from 'xlsx';
 
 @Component({
   selector: 'app-course-detail',
@@ -26,7 +28,8 @@ export class CourseDetailComponent implements OnInit{
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private _courseService: CourseService
+    private _courseService: CourseService,
+    private _gradeService: GradeService
   ){
 
   }
@@ -93,8 +96,10 @@ export class CourseDetailComponent implements OnInit{
           studentAssignments[submission.userId] = [];
         }
         submission.courseWorkTitle = courseWorkName[submission.courseWorkId].title;
+        submission.maxPoints = courseWorkName[submission.courseWorkId].maxPoints;
         studentAssignments[submission.userId].push(submission);
       });
+      console.log(studentAssignments)
       this.students.students.forEach(student => {
         const assignments = {};
         studentAssignments[student.userId].forEach(studentAssignment => {
@@ -111,12 +116,23 @@ export class CourseDetailComponent implements OnInit{
           return grade;
         });
       });
-
       return true;
     })
   }
 
   getGrade(assignment: any){
     return assignment?.assignedGrade;
+  }
+  
+  exportToExcel(){
+    let element = document.getElementById('grade-table');
+
+    const ws:xlsx.WorkSheet = xlsx.utils.table_to_sheet(element);
+
+    const wb:xlsx.WorkBook = xlsx.utils.book_new()
+
+    xlsx.utils.book_append_sheet(wb,ws,'Sheet1')
+
+    xlsx.writeFile(wb,"SampleGrade.xlsx")
   }
 }
