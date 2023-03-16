@@ -34,10 +34,10 @@ export class AuthService {
       console.log(credentials)
       const auth = getAuth();
       const token = credentials?.accessToken;
-      if(localStorage.getItem('auth-token')){
-        localStorage.removeItem('auth-token')
+      if(localStorage.getItem('credentials')){
+        localStorage.removeItem('credentials')
       }
-      token && localStorage.setItem('auth-token', token);
+      
 
       this.user = {
         displayName: auth.currentUser.displayName,
@@ -46,6 +46,9 @@ export class AuthService {
         authToken: token,
         apiKey: auth.config.apiKey
       }
+
+      token && localStorage.setItem('credentials', JSON.stringify(this.user));
+
       console.log(auth.config.apiKey)
 
       this._store.dispatch(setAuthUser(this.user))
@@ -55,11 +58,11 @@ export class AuthService {
   }
 
   getAuthToken(){
-    if(localStorage.getItem('auth-token')){
-      return localStorage.getItem('auth-token');
+    if(localStorage.getItem('credentials')){
+      const user = JSON.parse(localStorage.getItem('credentials'))
+      return user.authToken;
     }
     return '';
-    
   }
   logout(){
     this.auth.signOut();

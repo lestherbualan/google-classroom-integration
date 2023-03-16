@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit{
   async ngOnInit(): Promise<void> {
     const auth = await getAuth();
     console.log(auth.currentUser)
+    localStorage.clear()
     // if(auth.currentUser){
     //   console.log('already loggedin')
     //   this._router.navigate(['dashboard'])

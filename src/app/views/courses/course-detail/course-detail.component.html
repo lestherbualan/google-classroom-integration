@@ -5,12 +5,14 @@
       <c-card-header style="display: inline-flex;">
         <strong>Course Grades</strong> <small></small>
         <button style="margin-left: auto;" (click)="exportToExcel()">Export</button>
+        <button style="margin-left: auto;" (click)="testGradeTable()">Testing</button>
       </c-card-header>
       <c-card-body>
         <table [hover]="true" cTable id="grade-table">
             <thead>
               <tr>
                 <th scope="col">Student Name</th>
+                <th scope="col">Overall Grade</th>
                 <th scope="col" *ngFor="let header of gradeTableHeader">
                   {{header.name}}
                 </th>
@@ -18,6 +20,7 @@
             </thead>
             <tbody>
             <tr *ngFor="let student of gradeTable">
+              <td>{{student.name}}</td>
               <td>{{student.name}}</td>
               <td *ngFor="let header of gradeTableHeader">
                 {{getGrade(student.assignments[header.id])}}

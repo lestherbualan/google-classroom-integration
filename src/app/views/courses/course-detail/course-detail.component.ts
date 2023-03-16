@@ -99,7 +99,7 @@ export class CourseDetailComponent implements OnInit{
         submission.maxPoints = courseWorkName[submission.courseWorkId].maxPoints;
         studentAssignments[submission.userId].push(submission);
       });
-      console.log(studentAssignments)
+
       this.students.students.forEach(student => {
         const assignments = {};
         studentAssignments[student.userId].forEach(studentAssignment => {
@@ -134,5 +134,8 @@ export class CourseDetailComponent implements OnInit{
     xlsx.utils.book_append_sheet(wb,ws,'Sheet1')
 
     xlsx.writeFile(wb,"SampleGrade.xlsx")
+  }
+  testGradeTable(){
+    console.log(this.gradeTable)
   }
 }

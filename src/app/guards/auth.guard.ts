@@ -14,14 +14,13 @@ export class AuthGuard implements CanActivate {
   constructor(
     private _router:Router,
     private _store: Store<{authUser: User}>
-  ){
-    this.auth = getAuth()
-  }
+  ){}
+
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    console.log()
-    if(this.auth.currentUser != null){
+    this.auth = JSON.parse(localStorage.getItem('credentials'));
+    if(this.auth){
       return true;
     }else{
       this._router.navigate(['login']);

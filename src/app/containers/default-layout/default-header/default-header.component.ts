@@ -25,13 +25,17 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this._store.select('authUser').subscribe(authUser=>{
-      if (authUser){
-        this.user = authUser
-      }else{
-        this._router.navigate(['login'])
-      }
-    });
+    // this._store.select('authUser').subscribe(authUser=>{
+    //   if (authUser){
+    //     this.user = authUser
+    //   }else{
+    //     this._router.navigate(['login'])
+    //   }
+    // });
+    this._store.select('authUser').subscribe(authUse=>{
+      this.user = JSON.parse(localStorage.getItem('credentials'))
+      console.log(this.user)
+    })
   }
 
   logout(){

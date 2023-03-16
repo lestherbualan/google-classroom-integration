@@ -12,15 +12,19 @@ export class GuessGuard implements CanActivate {
   auth: any;
   constructor(
     private _router : Router,
-    private initialService: InitialService 
-  ){
-    this.auth = getAuth()
-  }
+  ){}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      
-    return true;
+    this.auth = JSON.parse(localStorage.getItem('credentials'));
+    
+    if(this.auth){
+      this._router.navigate(['dashboard']);
+      return false;
+
+    }else{
+      return true;
+    }
   }
   
 }
