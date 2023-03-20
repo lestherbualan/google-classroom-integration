@@ -21,7 +21,7 @@
             <tbody>
             <tr *ngFor="let student of gradeTable">
               <td>{{student.name}}</td>
-              <td>{{student.name}}</td>
+              <td>{{getAverage(student.assignments)}}</td>
               <td *ngFor="let header of gradeTableHeader">
                 {{getGrade(student.assignments[header.id])}}
               </td>

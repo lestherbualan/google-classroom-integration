@@ -6,6 +6,7 @@ import { StudentSubmission } from 'src/app/model/studentSubmission'
 import { Grade, Assignment } from 'src/app/model/Grade';
 import { GradeService} from 'src/app/services/grade.service';
 import * as xlsx from 'xlsx';
+import {Grade_Range_Percentage, Grade_Range_Decimal} from 'src/app/model/GradeRange';
 
 @Component({
   selector: 'app-course-detail',
@@ -50,8 +51,6 @@ export class CourseDetailComponent implements OnInit{
           assignments: {}
         })
       });
-
-      console.log(this.gradeTable)
 
       this._courseService.getCourseDetail({id: this.id, apiKey: this.apiKey},getAuth()).toPromise().then(res=>{
         this.courseWorks = res;
@@ -123,6 +122,11 @@ export class CourseDetailComponent implements OnInit{
   getGrade(assignment: any){
     return assignment?.assignedGrade;
   }
+  getTotal(assignment:any){
+    // maxPoints
+    // assignedGrade
+    return assignment?.maxPoints;
+  }
   
   exportToExcel(){
     let element = document.getElementById('grade-table');
@@ -137,5 +141,43 @@ export class CourseDetailComponent implements OnInit{
   }
   testGradeTable(){
     console.log(this.gradeTable)
+  }
+
+  // getAverage(assignments: any){
+  //   let total = 0;
+  //   let maxPoints = 0;
+
+  //   Object.keys(assignments).forEach((key)=>{
+  //     const assignment = assignments[key];
+  //     const tempTotal = this.getGrade(assignment);
+  //     total += tempTotal || 0;
+  //     if(tempTotal !== undefined)
+  //       maxPoints += this.getTotal(assignment) || 0;
+      
+  //   });
+  //   return (total/maxPoints)*100;
+  // }
+  getAverage(assignments: any){
+    let total = 0;
+    let maxPoints = 0;
+
+    Object.keys(assignments).forEach((key)=>{
+      const assignment = assignments[key];
+      const tempTotal = this.getGrade(assignment);
+      total += tempTotal || 0;
+      if(tempTotal !== undefined)
+        maxPoints += this.getTotal(assignment) || 0;
+      
+    });
+
+    let decimalGrade = null;
+    const average = (total/maxPoints)*100;
+    Grade_Range_Percentage.forEach((grade, index) => {
+        console.log(decimalGrade, ' ', grade, ' ', average)
+        if (decimalGrade === null && grade >= average) {
+            decimalGrade = Grade_Range_Decimal[index];
+        }
+    });
+    return decimalGrade;
   }
 }

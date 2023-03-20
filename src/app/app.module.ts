@@ -52,6 +52,8 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
 
 import { StoreModule } from '@ngrx/store';
 import { authUserReducer } from './store/reducer/auth-user.reducer';
+import { ProfileComponent } from './views/profile/profile.component';
+import { DevelopercontactComponent } from './views/developercontact/developercontact.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -64,7 +66,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS],
+  declarations: [AppComponent, ...APP_CONTAINERS, ProfileComponent, DevelopercontactComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

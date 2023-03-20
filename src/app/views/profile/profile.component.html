@@ -1,0 +1,57 @@
+<c-row>
+    <c-col lg="4">
+        <c-card class="mb-4">
+            <c-card-body>
+                <img cImg height="200" rounded src={{this.user?.photoUrl | async}} thumbnail width="200" />
+            </c-card-body>
+        </c-card>
+    </c-col>
+    <c-col xs="12" lg="8">
+        <c-card class="mb-4">
+            <c-card-body>
+                <c-row class="g-3">
+                <c-col xs>
+                    <input aria-label="First name" cFormControl placeholder="First name" />
+                </c-col>
+                <c-col xs>
+                    <input aria-label="Last name" cFormControl placeholder="Last name" />
+                </c-col>
+                </c-row>
+
+                <form cForm class="row g-3">
+                    <c-col md="6">
+                        <label cLabel for="inputEmail4">Email</label>
+                        <input cFormControl id="inputEmail4" type="email" />
+                    </c-col>
+                    <c-col md="6">
+                        <label cLabel for="inputPassword4">Password</label>
+                        <input cFormControl id="inputPassword4" type="password" />
+                    </c-col>
+                    <c-col xs="12">
+                        <label cLabel for="inputAddress">Address</label>
+                        <input cFormControl id="inputAddress" placeholder="1234 Main St" />
+                    </c-col>
+                    <c-col xs="12">
+                        <label cLabel for="inputAddress2">Address 2</label>
+                        <input cFormControl id="inputAddress2" placeholder="Apartment, studio, or floor" />
+                    </c-col>
+                    <c-col md="6">
+                        <label cLabel for="inputCity">City</label>
+                        <input cFormControl id="inputCity" />
+                    </c-col>
+                    <c-col md="4">
+                        <label cLabel for="inputState">State</label>
+                        <select cSelect id="inputState">
+                            <option>Choose...</option>
+                            <option>...</option>
+                        </select>
+                    </c-col>
+                    <c-col md="2">
+                        <label cLabel for="inputZip">Zip</label>
+                        <input cFormControl id="inputZip" />
+                    </c-col>
+                </form>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

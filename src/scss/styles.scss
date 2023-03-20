@@ -5,6 +5,10 @@
 $enable-ltr: true;
 $enable-rtl: true;
 
+// If you want to add something do it here
+@import "custom";
+
+
 // Import styles with default layout.
 @import "@coreui/coreui/scss/coreui";
 
@@ -21,6 +25,3 @@ $enable-rtl: true;
 
 // Prism.js
 @import "examples";
-
-// If you want to add something do it here
-@import "custom";

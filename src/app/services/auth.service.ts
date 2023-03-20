@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-
   user: User;
 
   constructor(
@@ -72,4 +71,9 @@ export class AuthService {
     console.log(data)
     return this.http.get(environment.googleAPIBaseUrl+'courses?key='+data.config.apiKey);
   }
+
+  getUser(){
+    return this.user;
+  }
+  
 }

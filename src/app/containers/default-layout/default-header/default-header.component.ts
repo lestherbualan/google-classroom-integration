@@ -40,6 +40,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit{
 
   logout(){
     const auth = getAuth();
+    localStorage.clear();
     auth.signOut().then(()=>{
       this._router.navigate(['login'])
     })

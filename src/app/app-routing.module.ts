@@ -8,6 +8,8 @@ import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuessGuard } from './guards/guess.guard';
+import { ProfileComponent } from './views/profile/profile.component';
+import { DevelopercontactComponent } from './views/developercontact/developercontact.component';
 
 const routes: Routes = [
   {
@@ -32,6 +34,20 @@ const routes: Routes = [
         path: 'course',
         loadChildren: () =>
           import('./views/courses/courses.module').then((m) => m.CoursesModule)
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        data:{
+          title: 'Profile'
+        }
+      },
+      {
+        path: 'developer',
+        component: DevelopercontactComponent,
+        data:{
+          title: 'Developer Contact'
+        }
       },
       {
         path: 'theme',
@@ -107,8 +123,9 @@ const routes: Routes = [
     component: RegisterComponent,
     data: {
       title: 'Register Page'
-    }
+    },
   },
+
   // {path: '**', redirectTo: 'dashboard'}
 ];
 
