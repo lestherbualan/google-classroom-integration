@@ -25,7 +25,8 @@ export class InitialService {
         photoUrl: this.auth.currentUser.photoURL,
         email: this.auth.currentUser.email,
         authToken: localStorage.getItem('auth-token'),
-        apiKey: this.auth.config.apiKey
+        apiKey: this.auth.config.apiKey,
+        userObj: user
       }
       
       this._store.dispatch(setAuthUser(this.user));

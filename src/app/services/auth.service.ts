@@ -36,21 +36,20 @@ export class AuthService {
       if(localStorage.getItem('credentials')){
         localStorage.removeItem('credentials')
       }
-      
+      console.log(auth)
 
-      this.user = {
+      this.user = <User>{
         displayName: auth.currentUser.displayName,
         photoUrl: auth.currentUser.photoURL,
         email: auth.currentUser.email,
         authToken: token,
-        apiKey: auth.config.apiKey
+        apiKey: auth.config.apiKey,
+        userObj: auth.currentUser
       }
 
       token && localStorage.setItem('credentials', JSON.stringify(this.user));
 
-      console.log(auth.config.apiKey)
-
-      this._store.dispatch(setAuthUser(this.user))
+      this._store.dispatch(setAuthUser(JSON.parse(JSON.stringify(this.user))))
       this._router.navigate(['dashboard'])
       
     })
@@ -70,10 +69,6 @@ export class AuthService {
   getCLass(data: any): Observable<any>{
     console.log(data)
     return this.http.get(environment.googleAPIBaseUrl+'courses?key='+data.config.apiKey);
-  }
-
-  getUser(){
-    return this.user;
   }
   
 }

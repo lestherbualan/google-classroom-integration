@@ -9,8 +9,4 @@ import { AuthService } from './auth.service';
 export class UserService {
 
   constructor(private auth: AuthService) { }
-
-  getUser(){  
-    return this.auth.getUser();
-  }
 }

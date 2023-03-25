@@ -12,6 +12,8 @@ export class CourseListComponent {
   archiveState: boolean= true;
   courseList: any;
 
+  courseLoading: boolean = true;
+  
   constructor(
       private _courseService: CourseService,
       private _router: Router
@@ -22,6 +24,7 @@ export class CourseListComponent {
     this._courseService.getCourseList(getAuth()).subscribe((res)=>{
       this.courseList = res;
       console.log(res)
+      this.courseLoading = false;
     })
   }
   courseDetail(data:any){
@@ -30,5 +33,8 @@ export class CourseListComponent {
 
   getCheckState(event){
     console.log(event.currentTarget.checked)
+  }
+  getCourseListTotal(){
+    return this.courseList.courses.length
   }
 }

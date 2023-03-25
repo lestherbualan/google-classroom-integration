@@ -1,3 +1,25 @@
 .pointer:hover{
     cursor: pointer;
 }
+.self-center{
+    place-self: center;
+}
+.table-center{
+    text-align: center;
+}
+c-card-body {
+    position: relative;
+}
+c-card-body #spinner{
+    position: absolute;
+    top: 50%;
+    left: 45%;
+}
+.passedColor{
+    color: #12bd12 !important;
+    font-weight: bold;
+}
+.failedColor{
+    color: red!important;
+    font-weight: bold;
+}

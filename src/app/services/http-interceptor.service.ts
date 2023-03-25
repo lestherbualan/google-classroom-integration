@@ -20,7 +20,6 @@ export class HttpInterceptorService implements HttpInterceptorService{
         headers: req.headers.set('Authorization', 'Bearer ' + token)
           .set('Accept','application/json')
       });
-      console.log('interceptor token: '+token)
       return next.handle(tokenizedReq);
     }else{
       this.authService.logout();

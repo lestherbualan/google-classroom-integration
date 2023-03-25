@@ -2,7 +2,7 @@
     <c-col lg="4">
         <c-card class="mb-4">
             <c-card-body>
-                <img cImg height="200" rounded src={{this.user?.photoUrl | async}} thumbnail width="200" />
+                <img cImg height="350" rounded src={{getPhotoUrl()}} thumbnail style="width: 100%;" />
             </c-card-body>
         </c-card>
     </c-col>
@@ -11,45 +11,35 @@
             <c-card-body>
                 <c-row class="g-3">
                 <c-col xs>
-                    <input aria-label="First name" cFormControl placeholder="First name" />
+                    <label cLabel for="inputFirstName">First Name</label>
+                    <input id="inputFirstName"  aria-label="First name" cFormControl placeholder="First name" value={{getFirstName()}} disabled/>
                 </c-col>
                 <c-col xs>
-                    <input aria-label="Last name" cFormControl placeholder="Last name" />
+                    <label cLabel for="inputLastName">Last Name</label>
+                    <input id="inputLastName" aria-label="Last name" cFormControl placeholder="Last name"  value={{getLastName()}} disabled/>
                 </c-col>
                 </c-row>
-
                 <form cForm class="row g-3">
                     <c-col md="6">
                         <label cLabel for="inputEmail4">Email</label>
-                        <input cFormControl id="inputEmail4" type="email" />
+                        <input cFormControl id="inputEmail4" type="email" value={{getEmail()}} disabled/>
                     </c-col>
                     <c-col md="6">
                         <label cLabel for="inputPassword4">Password</label>
-                        <input cFormControl id="inputPassword4" type="password" />
+                        <input cFormControl id="inputPassword4" type="password" disabled/>
+                    </c-col>
+                    <hr class="mt-5"/>          
+                    <c-col xs="12">
+                        <p class="p-0 m-0">API Data</p>
                     </c-col>
                     <c-col xs="12">
-                        <label cLabel for="inputAddress">Address</label>
-                        <input cFormControl id="inputAddress" placeholder="1234 Main St" />
+                        <label cLabel for="key">Api Key Provided</label>
+                        <input cFormControl id="key" placeholder="1234 Main St" value={{getApiKey()}} disabled/>
                     </c-col>
                     <c-col xs="12">
-                        <label cLabel for="inputAddress2">Address 2</label>
-                        <input cFormControl id="inputAddress2" placeholder="Apartment, studio, or floor" />
-                    </c-col>
-                    <c-col md="6">
-                        <label cLabel for="inputCity">City</label>
-                        <input cFormControl id="inputCity" />
-                    </c-col>
-                    <c-col md="4">
-                        <label cLabel for="inputState">State</label>
-                        <select cSelect id="inputState">
-                            <option>Choose...</option>
-                            <option>...</option>
-                        </select>
-                    </c-col>
-                    <c-col md="2">
-                        <label cLabel for="inputZip">Zip</label>
-                        <input cFormControl id="inputZip" />
-                    </c-col>
+                        <label cLabel for="auth">Authentication Key Provided</label>
+                        <input cFormControl id="auth" placeholder="1234 Main St" value={{getToken()}} disabled/>
+                    </c-col>                    
                 </form>
             </c-card-body>
         </c-card>

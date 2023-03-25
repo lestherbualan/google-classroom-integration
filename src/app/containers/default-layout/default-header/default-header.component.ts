@@ -34,7 +34,6 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit{
     // });
     this._store.select('authUser').subscribe(authUse=>{
       this.user = JSON.parse(localStorage.getItem('credentials'))
-      console.log(this.user)
     })
   }
 

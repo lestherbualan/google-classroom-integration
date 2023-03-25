@@ -3,12 +3,13 @@
         <c-card class="mb-4">
           <c-card-header style="display: inline-flex;">
             <strong>Course List</strong> <small></small>
-            <c-form-check sizing="xl" switch style="margin-left: auto;">
+            <!-- <c-form-check sizing="xl" switch style="margin-left: auto;">
               <input cFormCheckInput type="checkbox" checked={{archiveState}} (click)="getCheckState($event)"/>
               <label cFormCheckLabel>Show Archive</label>
-            </c-form-check>
+            </c-form-check> -->
           </c-card-header>
           <c-card-body>
+            <c-spinner id="spinner" variant="grow" color="info" *ngIf="courseLoading" class="table-center"></c-spinner>
             <table [hover]="true" cTable >
                 <thead>
                 <tr>

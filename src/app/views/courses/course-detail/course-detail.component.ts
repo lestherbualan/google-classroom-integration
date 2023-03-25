@@ -26,6 +26,11 @@ export class CourseDetailComponent implements OnInit{
     id: string;
     name: string;
   }[] = [];
+
+  gradeLoading: boolean = true;
+  workLoading: boolean = true;
+  studentLoading: boolean = true;
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -51,6 +56,7 @@ export class CourseDetailComponent implements OnInit{
           assignments: {}
         })
       });
+      this.studentLoading = false;
 
       this._courseService.getCourseDetail({id: this.id, apiKey: this.apiKey},getAuth()).toPromise().then(res=>{
         this.courseWorks = res;
@@ -69,7 +75,7 @@ export class CourseDetailComponent implements OnInit{
             }
           });
         });
-
+        this.workLoading = false;
       });
     });
   }
@@ -115,6 +121,7 @@ export class CourseDetailComponent implements OnInit{
           return grade;
         });
       });
+      this.gradeLoading = false;
       return true;
     })
   }
@@ -143,20 +150,6 @@ export class CourseDetailComponent implements OnInit{
     console.log(this.gradeTable)
   }
 
-  // getAverage(assignments: any){
-  //   let total = 0;
-  //   let maxPoints = 0;
-
-  //   Object.keys(assignments).forEach((key)=>{
-  //     const assignment = assignments[key];
-  //     const tempTotal = this.getGrade(assignment);
-  //     total += tempTotal || 0;
-  //     if(tempTotal !== undefined)
-  //       maxPoints += this.getTotal(assignment) || 0;
-      
-  //   });
-  //   return (total/maxPoints)*100;
-  // }
   getAverage(assignments: any){
     let total = 0;
     let maxPoints = 0;
@@ -173,11 +166,19 @@ export class CourseDetailComponent implements OnInit{
     let decimalGrade = null;
     const average = (total/maxPoints)*100;
     Grade_Range_Percentage.forEach((grade, index) => {
-        console.log(decimalGrade, ' ', grade, ' ', average)
-        if (decimalGrade === null && grade >= average) {
-            decimalGrade = Grade_Range_Decimal[index];
-        }
+      if (decimalGrade === null && grade >= average) {
+          decimalGrade = Grade_Range_Decimal[index];
+      }
     });
     return decimalGrade;
+  }
+
+  ivkPrint(){
+    let element = document.getElementById('grade-table');
+
+    const newWin= window.open("");
+    newWin.document.write(element.outerHTML);
+    newWin.print();
+    newWin.close();
   }
 }
