@@ -43,6 +43,8 @@ import {
   SidebarModule,
   TabsModule,
   UtilitiesModule,
+  SpinnerModule,
+  TableModule,
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
@@ -54,6 +56,7 @@ import { StoreModule } from '@ngrx/store';
 import { authUserReducer } from './store/reducer/auth-user.reducer';
 import { ProfileComponent } from './views/profile/profile.component';
 import { DevelopercontactComponent } from './views/developercontact/developercontact.component';
+import { StudentListComponent } from './views/student-list/student-list.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -66,7 +69,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, ProfileComponent, DevelopercontactComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, ProfileComponent, DevelopercontactComponent, StudentListComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -95,6 +98,8 @@ const APP_CONTAINERS = [
     ListGroupModule,
     CardModule,
     HttpClientModule,
+    SpinnerModule,
+    TableModule,
     StoreModule.forRoot({authUser: authUserReducer})
   ],
   providers: [

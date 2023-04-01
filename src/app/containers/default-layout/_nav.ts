@@ -2,11 +2,11 @@ import { INavData } from '@coreui/angular';
 import { getAuth } from 'firebase/auth';
 
 export const navItems: INavData[] = [
-  {
-    name: 'Dashboard',
-    url: '/dashboard',
-    iconComponent: { name: 'cil-speedometer' },
-  },
+  // {
+  //   name: 'Dashboard',
+  //   url: '/dashboard',
+  //   iconComponent: { name: 'cil-speedometer' },
+  // },
   {
     name: 'Course',
     url: '/course/course-list',
@@ -19,7 +19,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Students',
-    url: '/course/course-list',
+    url: '/students',
     iconComponent: { name: 'cil-list' }
   },
   // {

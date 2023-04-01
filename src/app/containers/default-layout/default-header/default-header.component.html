@@ -14,8 +14,8 @@
     </button>
     <c-header-nav class="d-none d-lg-flex me-auto">
       <c-nav-item>
-        <a cNavLink routerLink="/dashboard" routerLinkActive="active">
-          Dashboard
+        <a cNavLink routerLink="/course/course-list" routerLinkActive="active">
+          Courses
         </a>
       </c-nav-item>
       <!-- <c-nav-item>
@@ -30,7 +30,7 @@
 
     <c-header-nav class="d-none d-lg-flex">
       <c-nav-item>
-        <a cNavLink>
+        <a cNavLink routerLink="./profile">
           {{this.user?.displayName || ''}}
         </a>
       </c-nav-item>
@@ -55,10 +55,10 @@
     </c-header-nav>
 
   </c-container>
-  <c-header-divider></c-header-divider>
-  <c-container [fluid]="true">
+  <!-- <c-header-divider></c-header-divider> -->
+  <!-- <c-container [fluid]="true">
     <c-breadcrumb-router class="ms-2"></c-breadcrumb-router>
-  </c-container>
+  </c-container> -->
 </ng-container>
 <!--</c-header>-->
 
@@ -125,19 +125,19 @@
       </li>
       <li></li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a routerLink="./profile" cDropdownItem>
           <svg cIcon class="me-2" name="cilUser"></svg>
           Profile
         </a>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a  cDropdownItem>
           <svg cIcon class="me-2" name="cilSettings"></svg>
           Settings
         </a>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a  cDropdownItem>
           <svg cIcon class="me-2" name="cilChatBubble"></svg>
           Developers
         </a>

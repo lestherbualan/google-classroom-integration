@@ -10,11 +10,12 @@ import { AuthGuard } from './guards/auth.guard';
 import { GuessGuard } from './guards/guess.guard';
 import { ProfileComponent } from './views/profile/profile.component';
 import { DevelopercontactComponent } from './views/developercontact/developercontact.component';
+import { StudentListComponent } from './views/student-list/student-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'course', 
     pathMatch: 'full',
   },
   {
@@ -25,11 +26,11 @@ const routes: Routes = [
       title: 'Home'
     },
     children: [
-      {
-        path: 'dashboard',
-        loadChildren: () =>
-          import('./views/dashboard/dashboard.module').then((m) => m.DashboardModule)
-      },
+      // {
+      //   path: 'dashboard',
+      //   loadChildren: () =>
+      //     import('./views/dashboard/dashboard.module').then((m) => m.DashboardModule)
+      // },
       {
         path: 'course',
         loadChildren: () =>
@@ -40,6 +41,13 @@ const routes: Routes = [
         component: ProfileComponent,
         data:{
           title: 'Profile'
+        }
+      },
+      {
+        path: 'students',
+        component: StudentListComponent,
+        data:{
+          title: 'Student List'
         }
       },
       {

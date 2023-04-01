@@ -57,19 +57,30 @@ import { CourseDetailComponent } from './course-detail/course-detail.component';
 
 const routes: Routes = [
   {
-    path: 'course-list',
-    component: CourseListComponent,
-    data: {
-      title: 'Course List',
-    },
+    path: '',    
+    children: [
+      {
+        path: '',
+        redirectTo: 'course-list',
+        pathMatch: 'full',
+      },
+      {
+        path: 'course-list',
+        component: CourseListComponent,
+        data: {
+          title: 'Course List',
+        },
+      },
+      {
+        path: 'detail/:data',
+        component: CourseDetailComponent,
+        data: {
+          title: 'Course Detail',
+        },
+      }
+    ]
   },
-  {
-    path: 'detail/:data',
-    component: CourseDetailComponent,
-    data: {
-      title: 'Course Detail',
-    },
-  }
+  
 ];
 
 @NgModule({
@@ -78,7 +89,6 @@ const routes: Routes = [
       CourseDetailComponent
     ],
     imports: [
-        RouterModule.forChild(routes),
         CommonModule,
         DocsComponentsModule,
         CommonModule,
@@ -109,6 +119,7 @@ const routes: Routes = [
         PaginationModule,
         PopoverModule,
         TableModule,
+        RouterModule.forChild(routes),
     ]
 })
 export class CoursesModule { }

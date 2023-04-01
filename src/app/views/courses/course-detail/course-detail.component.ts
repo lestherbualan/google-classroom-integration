@@ -46,7 +46,7 @@ export class CourseDetailComponent implements OnInit{
     
     this._courseService.getCourseStudents({id: this.id},getAuth()).toPromise().then(res=>{
       this.students = res;
-
+      console.log(this.students)
 
       this.students.students.forEach(student => {
         this.gradeTable.push({
@@ -82,7 +82,7 @@ export class CourseDetailComponent implements OnInit{
 
   studentProfile(id:any){
     this._courseService.getCourseStudentProfile({id},getAuth()).subscribe(res=>{
-      // console.log(res);
+      console.log(res);
     })
   }
 
@@ -180,5 +180,8 @@ export class CourseDetailComponent implements OnInit{
     newWin.document.write(element.outerHTML);
     newWin.print();
     newWin.close();
+  }
+  getStudentProfilePicture(student:any){
+    return 'https:'+ student.profile.photoUrl;
   }
 }

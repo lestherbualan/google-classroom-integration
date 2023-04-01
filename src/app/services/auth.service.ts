@@ -50,7 +50,7 @@ export class AuthService {
       token && localStorage.setItem('credentials', JSON.stringify(this.user));
 
       this._store.dispatch(setAuthUser(JSON.parse(JSON.stringify(this.user))))
-      this._router.navigate(['dashboard'])
+      this._router.navigate(['course/course-list'])
       
     })
   }

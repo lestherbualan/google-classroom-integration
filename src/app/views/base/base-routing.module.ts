@@ -24,11 +24,11 @@ const routes: Routes = [
       title: 'Base',
     },
     children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'cards',
-      },
+      // {
+      //   path: '',
+      //   pathMatch: 'full',
+      //   redirectTo: 'cards',
+      // },
       {
         path: 'accordion',
         component: AccordionsComponent,

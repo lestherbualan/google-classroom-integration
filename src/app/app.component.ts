@@ -13,7 +13,7 @@ import { InitialService } from './services/initial.service'
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent implements OnInit {
-  title = 'CoreUI Free Angular Admin Template';
+  title = 'Automated Class Record';
 
   constructor(
     private router: Router,

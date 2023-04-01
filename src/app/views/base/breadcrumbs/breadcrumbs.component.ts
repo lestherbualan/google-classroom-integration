@@ -10,20 +10,20 @@ export class BreadcrumbsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.items = [
-      { label: 'Home', url: '/', attributes: { title: 'Home' } },
-      { label: 'Library', url: '/' },
-      { label: 'Data', url: '/dashboard/' },
-      { label: 'CoreUI', url: '/' }
-    ];
+    // this.items = [
+    //   { label: 'Home', url: '/course/course-list', attributes: { title: 'Home' } },
+    //   { label: 'Library', url: '/' },
+    //   { label: 'Data', url: '/dashboard/' },
+    //   { label: 'CoreUI', url: '/' }
+    // ];
 
-    setTimeout(() => {
-      this.items = [
-        { label: 'CoreUI', url: '/' },
-        { label: 'Data', url: '/dashboard/' },
-        { label: 'Library', url: '/' },
-        { label: 'Home', url: '/', attributes: { title: 'Home' } }
-      ];
-    }, 5000);
+    // setTimeout(() => {
+    //   this.items = [
+    //     { label: 'CoreUI', url: '/' },
+    //     { label: 'Data', url: '/dashboard/' },
+    //     { label: 'Library', url: '/' },
+    //     { label: 'Home', url: '/course/course-list', attributes: { title: 'Home' } }
+    //   ];
+    // }, 5000);
   }
 }
