@@ -72,7 +72,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'detail/:data',
+        path: 'detail/:data/:name',
         component: CourseDetailComponent,
         data: {
           title: 'Course Detail',

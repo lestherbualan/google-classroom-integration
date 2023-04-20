@@ -7,6 +7,9 @@ import { Grade, Assignment } from 'src/app/model/Grade';
 import { GradeService} from 'src/app/services/grade.service';
 import * as xlsx from 'xlsx';
 import {Grade_Range_Percentage, Grade_Range_Decimal} from 'src/app/model/GradeRange';
+import * as ExcelJs from 'exceljs';
+import * as fs from 'file-saver';
+
 
 @Component({
   selector: 'app-course-detail',
@@ -16,7 +19,7 @@ import {Grade_Range_Percentage, Grade_Range_Decimal} from 'src/app/model/GradeRa
 export class CourseDetailComponent implements OnInit{
   id: string;
   apiKey: string;
-
+  courseName: string;
   courseWorks: any;
   students: any;
   studentSubmissions: any;
@@ -30,6 +33,7 @@ export class CourseDetailComponent implements OnInit{
   gradeLoading: boolean = true;
   workLoading: boolean = true;
   studentLoading: boolean = true;
+  EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 
   constructor(
     private _router: Router,
@@ -42,6 +46,7 @@ export class CourseDetailComponent implements OnInit{
   ngOnInit(): void {
     const auth = getAuth();
     this.id = this._route.snapshot.paramMap.get('data');
+    this.courseName = this._route.snapshot.paramMap.get('name');
     this.apiKey = auth.config.apiKey;
     
     this._courseService.getCourseStudents({id: this.id},getAuth()).toPromise().then(res=>{
@@ -52,6 +57,8 @@ export class CourseDetailComponent implements OnInit{
         this.gradeTable.push({
           id: student.userId,
           name: student.profile.name.fullName,
+          surName: student.profile.name.familyName,
+          firstName: student.profile.name.givenName,
           overAllGrade: 0,
           assignments: {}
         })
@@ -135,17 +142,6 @@ export class CourseDetailComponent implements OnInit{
     return assignment?.maxPoints;
   }
   
-  exportToExcel(){
-    let element = document.getElementById('grade-table');
-
-    const ws:xlsx.WorkSheet = xlsx.utils.table_to_sheet(element);
-
-    const wb:xlsx.WorkBook = xlsx.utils.book_new()
-
-    xlsx.utils.book_append_sheet(wb,ws,'Sheet1')
-
-    xlsx.writeFile(wb,"SampleGrade.xlsx")
-  }
   testGradeTable(){
     console.log(this.gradeTable)
   }
@@ -183,5 +179,106 @@ export class CourseDetailComponent implements OnInit{
   }
   getStudentProfilePicture(student:any){
     return 'https:'+ student.profile.photoUrl;
+  }
+  getRating(assignments){
+    const average = this.getAverage(assignments);
+    if( average <= 3 && average >= 1){
+      return 'Pass';
+    }else{
+      return 'INC'
+    }
+  }
+  getRatingClass(assignments){
+    const average = this.getAverage(assignments);
+    if( average <= 3 && average >= 1){
+      return 'passedColor';
+    }else{
+      return 'failedColor'
+    }
+  }
+
+  exportToExcel(){
+    const workbook = new ExcelJs.Workbook();
+
+    workbook.creator = 'Me';
+    workbook.lastModifiedBy = 'Her';
+    workbook.created = new Date(1985, 8, 30);
+    workbook.modified = new Date();
+    workbook.lastPrinted = new Date(2016, 9, 27);
+
+    const worksheet = workbook.addWorksheet('sheetname',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:false}]});
+    worksheet.getCell('B1').value = "Course No: "+this.courseName
+
+    // worksheet.addRow([]);
+
+    // worksheet.addRow([]);
+    // worksheet.mergeCells('A1:H1');
+    // worksheet.getCell('A1').value = 'hello world';
+    // worksheet.getCell('A1').alignment = { horizontal: 'center' };
+    // worksheet.getCell('A1').font = { size: 15, bold: true };
+
+    // worksheet.columns = [
+    //     { header: 'Id', key: 'id', width: 10 },
+    //     { header: 'Name', key: 'name', width: 32 },
+    //     { header: 'D.O.B.', key: 'dob', width: 10, outlineLevel: 1 }
+    // ];
+
+    // worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
+    // worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
+    worksheet.addTable({
+      name: 'MyTable',
+      ref: 'B4',
+      headerRow: true,
+      totalsRow: true,
+      style: {
+        theme: null,
+        showRowStripes: true,
+      },
+      columns: [
+        {name: 'Date', totalsRowLabel: 'Totals:', filterButton: true},
+        {name: 'Amount', totalsRowFunction: 'sum', filterButton: false},
+      ],
+      rows: [
+        [new Date('2019-07-20'), 70.10],
+        [new Date('2019-07-21'), 70.60],
+        [new Date('2019-07-22'), 70.10],
+      ],
+    });
+
+    workbook.xlsx.writeBuffer().then((data: ArrayBuffer) => {
+      const blob = new Blob([data], { type: this.EXCEL_TYPE });
+      fs.saveAs(blob, 'sample' + '.xlsx');
+    });
+
+
+    // let element = document.getElementById('grade-table');
+
+    // const ws:xlsx.WorkSheet = xlsx.utils.table_to_sheet(element);
+
+    // const wb:xlsx.WorkBook = xlsx.utils.book_new()
+
+    // xlsx.utils.book_append_sheet(wb,ws,'Sheet1')
+
+    // xlsx.writeFile(wb,"SampleGrade.xlsx")
+  }
+  date: any;
+
+  test() {
+
+    // January to May = Finals
+    // June to December = Midterm
+
+
+    this.date = this.courseWorks.courseWork;
+    this.date.forEach(element => {
+      let x = element.creationTime;
+      let date = new Date(x);
+      console.log(date.getDate())
+    });
+    console.log(this.courseWorks)
+  }
+  
+  getMidterm(){
+    return 'hello hero'
   }
 }

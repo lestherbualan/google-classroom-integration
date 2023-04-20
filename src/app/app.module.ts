@@ -57,6 +57,7 @@ import { authUserReducer } from './store/reducer/auth-user.reducer';
 import { ProfileComponent } from './views/profile/profile.component';
 import { DevelopercontactComponent } from './views/developercontact/developercontact.component';
 import { StudentListComponent } from './views/student-list/student-list.component';
+import {CheckAuthenticationInterceptor} from './services/check-authentication-interceptor.service';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -114,6 +115,11 @@ const APP_CONTAINERS = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CheckAuthenticationInterceptor,
       multi: true
     },
     IconSetService,

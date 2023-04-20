@@ -27,8 +27,8 @@ export class CourseListComponent {
       this.courseLoading = false;
     })
   }
-  courseDetail(data:any){
-    this._router.navigate(['/course/detail', data])
+  courseDetail(data:any, name:any){
+    this._router.navigate(['/course/detail', data, name])
   }
 
   getCheckState(event){

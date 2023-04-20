@@ -13,6 +13,55 @@
             <svg cIcon class="me-2" name="cilPrint"></svg>
             Print
           </button>
+          <button (click)="test()" cButton color="success" [disabled]="gradeLoading">
+            <svg cIcon class="me-2" name="cilPrint"></svg>
+            Test
+          </button>
+        </div>
+      </c-card-header>
+      <c-card-body>
+        <c-spinner id="spinner" variant="grow" color="info" *ngIf="gradeLoading" class="table-center"></c-spinner>
+        <table [hover]="true" cTable id="grade-table-temporary">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Surname</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Middle Name</th>
+                <th scope="col">MT</th>
+              </tr>
+            </thead>
+            <tbody>            
+            <tr *ngFor="let student of gradeTable; index as i">
+              <td>{{i+1}}</td>
+              <td>{{student.surName}}</td>
+              <td>{{student.firstName}}</td>
+              <td></td>
+              <!-- MidTerm Here ! -->
+              <td>
+                {{getMidterm()}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+      </c-card-body>
+    </c-card>
+    <c-card class="mb-4">
+      <c-card-header style="display: inline-flex;">
+        <strong class="self-center">Course Grades</strong> <small></small>
+        <div style="margin-left: auto;">
+          <button (click)="exportToExcel()" cButton color="success" [disabled]="gradeLoading">
+            <svg cIcon class="me-2" name="cilExternalLink"></svg>
+            Export
+          </button>
+          <button (click)="ivkPrint()" cButton color="success" [disabled]="gradeLoading">
+            <svg cIcon class="me-2" name="cilPrint"></svg>
+            Print
+          </button>
+          <button (click)="test()" cButton color="success" [disabled]="gradeLoading">
+            <svg cIcon class="me-2" name="cilPrint"></svg>
+            Test
+          </button>
         </div>
       </c-card-header>
       <c-card-body>
@@ -20,6 +69,7 @@
         <table [hover]="true" cTable id="grade-table">
             <thead>
               <tr>
+                <th scope="col"></th>
                 <th scope="col">Student Name</th>
                 <th scope="col">Overall Grade</th>
                 <th scope="col">Final Rate</th>
@@ -29,12 +79,13 @@
               </tr>
             </thead>
             <tbody>            
-            <tr *ngFor="let student of gradeTable">
+            <tr *ngFor="let student of gradeTable; index as i">
+              <td>{{i+1}}</td>
               <td>{{student.name}}</td>
-              <td [ngClass]="getAverage(student.assignments) <= 3 ? 'passedColor': 'failedColor'"
+              <td [ngClass]="getRatingClass(student.assignments)"
               >{{getAverage(student.assignments)}}</td>
-              <td [ngClass]="getAverage(student.assignments) <= 3 ? 'passedColor': 'failedColor'"
-              >{{getAverage(student.assignments) <= 3 ? 'Pass': 'INC'}}</td>
+              <td [ngClass]="getRatingClass(student.assignments)"
+              >{{getRating(student.assignments)}}</td>
               <td *ngFor="let header of gradeTableHeader">
                 {{getGrade(student.assignments[header.id])}}
               </td>
