@@ -27,8 +27,9 @@ export class CourseListComponent {
       this.courseLoading = false;
     })
   }
-  courseDetail(data:any, name:any){
-    this._router.navigate(['/course/detail', data, name])
+  courseDetail(data:any, name:any, creatorid:any){
+    console.log(this.courseList)
+    this._router.navigate(['/course/detail', data, name,creatorid])
   }
 
   getCheckState(event){

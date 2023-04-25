@@ -20,7 +20,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let course of courseList?.courses || []" class="pointer" (click)="courseDetail(course.id, course.name)">
+                <tr *ngFor="let course of courseList?.courses || []" class="pointer" (click)="courseDetail(course.id, course.name,course.ownerId)">
                   <th scope="row">{{course.courseState}}</th>
                   <td>{{course.name}}</td>
                   <td>{{course.descriptionHeading}}</td>

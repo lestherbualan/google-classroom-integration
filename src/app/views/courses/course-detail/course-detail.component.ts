@@ -10,7 +10,6 @@ import {Grade_Range_Percentage, Grade_Range_Decimal} from 'src/app/model/GradeRa
 import * as ExcelJs from 'exceljs';
 import * as fs from 'file-saver';
 
-
 @Component({
   selector: 'app-course-detail',
   templateUrl: './course-detail.component.html',
@@ -29,6 +28,8 @@ export class CourseDetailComponent implements OnInit{
     id: string;
     name: string;
   }[] = [];
+  creatorId: string;
+  creatorProfile:any;
 
   gradeLoading: boolean = true;
   workLoading: boolean = true;
@@ -47,6 +48,7 @@ export class CourseDetailComponent implements OnInit{
     const auth = getAuth();
     this.id = this._route.snapshot.paramMap.get('data');
     this.courseName = this._route.snapshot.paramMap.get('name');
+    this.creatorId = this._route.snapshot.paramMap.get('creatorid');
     this.apiKey = auth.config.apiKey;
     
     this._courseService.getCourseStudents({id: this.id},getAuth()).toPromise().then(res=>{
@@ -85,6 +87,9 @@ export class CourseDetailComponent implements OnInit{
         this.workLoading = false;
       });
     });
+    this._courseService.getTeacherProfile({courseId: this.id, creatorId: this.creatorId},getAuth()).toPromise().then(res=>{
+      this.creatorProfile = res;
+    })
   }
 
   studentProfile(id:any){
@@ -137,8 +142,6 @@ export class CourseDetailComponent implements OnInit{
     return assignment?.assignedGrade;
   }
   getTotal(assignment:any){
-    // maxPoints
-    // assignedGrade
     return assignment?.maxPoints;
   }
   
@@ -158,7 +161,6 @@ export class CourseDetailComponent implements OnInit{
         maxPoints += this.getTotal(assignment) || 0;
       
     });
-
     let decimalGrade = null;
     const average = (total/maxPoints)*100;
     Grade_Range_Percentage.forEach((grade, index) => {
@@ -170,7 +172,7 @@ export class CourseDetailComponent implements OnInit{
   }
 
   ivkPrint(){
-    let element = document.getElementById('grade-table');
+    let element = document.getElementById('grade-table-record');
 
     const newWin= window.open("");
     newWin.document.write(element.outerHTML);
@@ -198,87 +200,301 @@ export class CourseDetailComponent implements OnInit{
   }
 
   exportToExcel(){
+    
     const workbook = new ExcelJs.Workbook();
 
-    workbook.creator = 'Me';
-    workbook.lastModifiedBy = 'Her';
-    workbook.created = new Date(1985, 8, 30);
+    workbook.creator = 'Creator';
+    workbook.lastModifiedBy = 'Creator';
+    workbook.created = new Date();
     workbook.modified = new Date();
-    workbook.lastPrinted = new Date(2016, 9, 27);
+    workbook.lastPrinted = new Date();
 
-    const worksheet = workbook.addWorksheet('sheetname',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:false}]});
-    worksheet.getCell('B1').value = "Course No: "+this.courseName
+    const worksheet = workbook.addWorksheet('Class Record',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:false}]});
+    worksheet.getCell('B1').value = "Course No: "+this.courseName;
 
-    // worksheet.addRow([]);
+    worksheet.getCell('H2').value = "Instructor: "+ this.creatorProfile.profile.name.fullName;
+    
 
-    // worksheet.addRow([]);
-    // worksheet.mergeCells('A1:H1');
-    // worksheet.getCell('A1').value = 'hello world';
-    // worksheet.getCell('A1').alignment = { horizontal: 'center' };
-    // worksheet.getCell('A1').font = { size: 15, bold: true };
+    const table = document.getElementById('grade-table-record') as HTMLTableElement;
 
-    // worksheet.columns = [
-    //     { header: 'Id', key: 'id', width: 10 },
-    //     { header: 'Name', key: 'name', width: 32 },
-    //     { header: 'D.O.B.', key: 'dob', width: 10, outlineLevel: 1 }
-    // ];
+    const rows = table.rows;
 
-    // worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-    // worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
+    const data = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const cells = row.cells;
+
+      const rowData = {};
+
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        const cellData = cell.textContent.trim();
+        rowData[`col${j + 1}`] = cellData;
+      }
+
+      data.push(rowData);
+    }
+    const array = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const object = data[i];
+
+      const row = [
+        object.col1,
+        object.col2,
+        object.col3,
+        object.col4,
+        object.col5,
+        object.col6,
+        object.col7,
+        object.col8,
+        object.col9,
+        object.col10
+      ];
+
+      array.push(row);
+    }
+
     worksheet.addTable({
       name: 'MyTable',
       ref: 'B4',
       headerRow: true,
-      totalsRow: true,
+      totalsRow: false,
       style: {
         theme: null,
         showRowStripes: true,
       },
       columns: [
-        {name: 'Date', totalsRowLabel: 'Totals:', filterButton: true},
-        {name: 'Amount', totalsRowFunction: 'sum', filterButton: false},
+        {name: ' ', filterButton: false},
+        {name: 'Student No.',filterButton: false},
+        {name: 'Surname',filterButton: false},
+        {name: 'First Name',filterButton: false},
+        {name: 'Middle Name',filterButton: false},
+        {name: 'Course',filterButton: false},
+        {name: 'Year/Section',filterButton: false},
+        {name: 'MT',filterButton: false},
+        {name: 'Finals',filterButton: false},
+        {name: 'Rating',filterButton: false},
       ],
-      rows: [
-        [new Date('2019-07-20'), 70.10],
-        [new Date('2019-07-21'), 70.60],
-        [new Date('2019-07-22'), 70.10],
-      ],
+      rows: array
     });
+
+
+
+    worksheet.eachRow((row, rowNumber) => {
+      row.eachCell((cell, colNumber) => {
+        cell.font = { size: 14 };
+      });
+    });
+    const columnB = worksheet.getColumn('B');
+    columnB.width = 5;
+    const columnC = worksheet.getColumn('C');
+    columnC.width = 15;
+    const columnD = worksheet.getColumn('D');
+    columnD.width = 20;
+    const columnE = worksheet.getColumn('E');
+    columnE.width = 20;
+    const columnF = worksheet.getColumn('F');
+    columnF.width = 20;
+    const columnG = worksheet.getColumn('G');
+    columnG.width = 15;
+    const columnH = worksheet.getColumn('H');
+    columnH.width = 17;
+    const columnI = worksheet.getColumn('I');
+    columnI.width = 10;
+    const columnJ = worksheet.getColumn('J');
+    columnJ.width = 10;
+    const columnK = worksheet.getColumn('K');
+    columnK.width = 10;
+
+
+    worksheet.getCell('B4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('C4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('D4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('E4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('F4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('G4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('H4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('I4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('J4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+    worksheet.getCell('K4').border = {
+      top: {style:'thin'},
+      bottom: {style:'thin'},
+    };
+
+    // font color blue
+    worksheet.getCell('B4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('C4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('D4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('E4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('F4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('G4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('H4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('I4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('J4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+    worksheet.getCell('K4').font = {
+      color: { argb: '305496'},
+      size: 14,
+      bold: true,
+    }
+
+    worksheet.getCell('H2').font = {
+      size: 14,
+      bold: true,
+    }
+
+    const stamp = this.getNameStamp();
 
     workbook.xlsx.writeBuffer().then((data: ArrayBuffer) => {
       const blob = new Blob([data], { type: this.EXCEL_TYPE });
-      fs.saveAs(blob, 'sample' + '.xlsx');
+      fs.saveAs(blob, `Class Record Export ${stamp}` + '.xlsx');
     });
 
-
-    // let element = document.getElementById('grade-table');
-
-    // const ws:xlsx.WorkSheet = xlsx.utils.table_to_sheet(element);
-
-    // const wb:xlsx.WorkBook = xlsx.utils.book_new()
-
-    // xlsx.utils.book_append_sheet(wb,ws,'Sheet1')
-
-    // xlsx.writeFile(wb,"SampleGrade.xlsx")
   }
-  date: any;
 
   test() {
-
-    // January to May = Finals
-    // June to December = Midterm
-
-
-    this.date = this.courseWorks.courseWork;
-    this.date.forEach(element => {
-      let x = element.creationTime;
-      let date = new Date(x);
-      console.log(date.getDate())
-    });
     console.log(this.courseWorks)
   }
   
-  getMidterm(){
-    return 'hello hero'
+  getMidterm(student:any){
+    let midterm: {}[] = [];
+    let rate = 0;
+    let maxPoints = 0;
+    Object.keys(student.assignments).forEach((key)=>{
+      const creationDate = new Date(student.assignments[key].creationTime);
+      if (creationDate.getMonth()+1 <= 5 && creationDate.getMonth()+1 > 0){
+        midterm.push(student.assignments[key])
+      }
+    });
+    midterm.forEach((element: any)=>{
+      rate += element.assignedGrade || 0;
+      if(element.assignedGrade !== undefined){
+        maxPoints += element.maxPoints;
+      }
+    })
+
+    const average = (rate/maxPoints)*100;
+    let decimalGrade = null;
+    Grade_Range_Percentage.forEach((grade, index) => {
+      if (decimalGrade === null && grade >= average) {
+          decimalGrade = Grade_Range_Decimal[index];
+      }
+    });
+
+    return decimalGrade || 0;
+  }
+
+  getFinalterm(student:any){
+    let finalterm: {}[] = [];
+    let rate = 0;
+    let maxPoints = 0;
+    Object.keys(student.assignments).forEach((key)=>{
+      const creationDate = new Date(student.assignments[key].creationTime);
+      if(creationDate.getMonth()+1 >= 6 && creationDate.getMonth()+1 < 13 ){
+        finalterm.push(student.assignments[key])
+      }
+    });
+    finalterm.forEach((element: any)=>{
+      rate += element.assignedGrade || 0;
+      if(element.assignedGrade !== undefined){
+        maxPoints += element.maxPoints;
+      }
+    })
+
+    const average = (rate/maxPoints)*100;
+    let decimalGrade = null;
+    Grade_Range_Percentage.forEach((grade, index) => {
+      if (decimalGrade === null && grade >= average) {
+          decimalGrade = Grade_Range_Decimal[index];
+      }
+    });
+
+    return decimalGrade || 0;
+  }
+
+  getFinalRating(student:any){
+    let midterm = this.getMidterm(student);
+    let finalterm = this.getFinalterm(student);
+    if (midterm == 0 || finalterm == 0){
+      return 'INC';
+    }
+    return (midterm+finalterm)/2;
+  }
+  
+  getNameStamp(){
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const year = now.getFullYear();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    const formattedDate = `${month}/${day}/${year}`;
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+    return `${formattedDate} ${formattedTime}`
   }
 }
