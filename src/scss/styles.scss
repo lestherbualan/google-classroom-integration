@@ -25,3 +25,10 @@ $enable-rtl: true;
 
 // Prism.js
 @import "examples";
+
+.sidebar {
+    --cui-sidebar-bg: rgba(6,14,77,1) !important;
+}
+.sidebar-brand {
+    background-color: white !important;
+}
