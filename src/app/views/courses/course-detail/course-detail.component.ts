@@ -12,10 +12,15 @@ import * as fs from 'file-saver';
 import { slsuBase64 } from '../../../../assets/slsuBase64';
 import { importantBase64 } from '../../../../assets/important';
 import { graderange } from '../../../../assets/graderange';
+import { slsulogowithtext } from '../../../../assets/slsulogowithtext';
+import { slsustarrating } from '../../../../assets/slsustarrating';
+import { slsuiso } from '../../../../assets/slsuiso';
 import { ClassRecordService } from 'src/app/services/class-record.service';
 import { PdfService } from '../../../services/pdf.service';
 import { XlsxWriteOptions } from 'exceljs/dist/es5/exceljs.browser';
 import {utils} from 'exceljs/lib/utils/utils';
+import { style } from '@angular/animations';
+import { NewclassrecordService }from 'src/app/services/newclassrecord.service';
 
 @Component({
   selector: 'app-course-detail',
@@ -41,6 +46,9 @@ export class CourseDetailComponent implements OnInit{
   gradeLoading: boolean = true;
   workLoading: boolean = true;
   studentLoading: boolean = true;
+
+  section:any;
+
   EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 
   constructor(
@@ -49,7 +57,8 @@ export class CourseDetailComponent implements OnInit{
     private _courseService: CourseService,
     private _gradeService: GradeService,
     private _classRecordService: ClassRecordService,
-    private _pdfService: PdfService
+    private _pdfService: PdfService,
+    private _newClassRecord: NewclassrecordService
   ){
 
   }
@@ -93,6 +102,12 @@ export class CourseDetailComponent implements OnInit{
             }
           });
         });
+
+        //this.courseWorks.courseWork[0].courseId
+        this._courseService.getCourseSectionDetail({courseId:this.courseWorks.courseWork[0].courseId },getAuth()).toPromise().then((res:any)=>{
+          this.section = res.section;
+        })
+
         this.workLoading = false;
       });
     });
@@ -222,27 +237,67 @@ export class CourseDetailComponent implements OnInit{
     workbook.lastPrinted = new Date();
 
     const worksheet = workbook.addWorksheet('GradeSheet',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:false}]});
-    
+    const classRecord = workbook.addWorksheet('Class Record',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:false}]})
+    const newClassRecord = workbook.addWorksheet('Record',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:false}]})
+    // header  ========================
+    const slsuheader = workbook.addImage({
+      base64: slsulogowithtext,
+      extension: 'png',
+    });
+    worksheet.addImage(slsuheader, {
+      tl: { col: 1, row: 1 },
+      ext: { width: 285, height: 77 }
+    });
     worksheet.mergeCells('E1:G1');
     worksheet.mergeCells('E2:G2');
     worksheet.mergeCells('E3:G3');
-    worksheet.mergeCells('E5:G5');
+    worksheet.mergeCells('E4:G4');
     worksheet.mergeCells('E6:G6');
-    worksheet.getCell('E1').value = 'Republic of the Philippines';
-    worksheet.getCell('E2').value = 'SOUTHERN LEYTE STATE UNIVERSITY - CTE';
-    worksheet.getCell('E3').value = 'Tomas Oppus, Southern Leyte';
-    worksheet.getCell('E5').value = 'OFFICE OF THE REGISTRAR';
-    worksheet.getCell('E6').value = 'GRADE SHEET';
+    worksheet.mergeCells('E11:G11');
+    worksheet.getCell('E1').value = 'TOMAS OPPUS CAMPUS';
+    worksheet.getCell('E2').value = 'San Isidro, Tomas Oppus, Southern Leyte';
+    worksheet.getCell('E3').value = 'Contact No. 09486089319';
+    worksheet.getCell('E4').value = 'Website: www.southernleytestateu.edu.ph';
+    worksheet.getCell('E11').value = 'GRADE SHEET';
+    // const campusName = worksheet.getCell('H2');
+    // const address = worksheet.getCell('H3');
+    // const contact = worksheet.getCell('H4');
+    // const site = worksheet.getCell('H5');
+    // campusName.value = 'TOMAS OPPUS CAMPUS'
+    // address.value = 'San Isidro, Tomas Oppus, Southern Leyte'
+    // contact.value = 'Contact No. 09486089319'
+    // site.value = 'Website: www.southernleytestateu.edu.ph'
+    
+    worksheet.mergeCells('B8:K8');
+    const lastHeader = worksheet.getCell('B8');
+    lastHeader.value = 'Excellence | Service | Leadership and Good Governance | Innovation | Social Responsibility | Integrity | Professionalism | Spirituality'
+
+    // end header =====================
+
+    
+    // worksheet.mergeCells('E1:G1');
+    // worksheet.mergeCells('E2:G2');
+    // worksheet.mergeCells('E3:G3');
+    // worksheet.mergeCells('E5:G5');
+    // worksheet.mergeCells('E6:G6');
+    // worksheet.getCell('E11').value = 'Republic of the Philippines';
+    // worksheet.getCell('E12').value = 'SOUTHERN LEYTE STATE UNIVERSITY - CTE';
+    // worksheet.getCell('E13').value = 'Tomas Oppus, Southern Leyte';
+    // worksheet.getCell('E15').value = 'OFFICE OF THE REGISTRAR';
+    // worksheet.getCell('E16').value = 'GRADE SHEET';
     
     let sems = this.getSchoolYear();
-    worksheet.getCell('B8').value = 'School Level: Under Graduate';
-    worksheet.getCell('B9').value = 'School Year: 2022-2023';
-    worksheet.getCell('E9').value = 'Semester: '+sems;
-    worksheet.getCell('B10').value = 'Room/Day/Time: ';
-    worksheet.getCell('B11').value = "Course No: "+this.courseName;
-    worksheet.getCell('H12').value = "Instructor: "+ this.creatorProfile.profile.name.fullName;
+    worksheet.getCell('B14').value = 'School Level: Under Graduate';
+    worksheet.getCell('B15').value = 'School Year: 2022-2023';
+    worksheet.getCell('E15').value = 'Semester: '+sems;
+    worksheet.getCell('B16').value = 'Room/Day/Time: ';
+    worksheet.getCell('B17').value = "Course No: "+this.courseName;
+    worksheet.getCell('H18').value = "Instructor: "+ this.creatorProfile.profile.name.fullName;
     
-    const myBase64Image = slsuBase64;
+    worksheet.getCell('H1').value = 'Doc. Code: SLSU-QF-R006'
+    worksheet.getCell('H2').value = 'Revision: 00'
+    worksheet.getCell('H3').value = 'Date: 20 October 2016'
+    //const myBase64Image = slsuBase64;
     const importantImage = importantBase64;
 
     const imageId3 = workbook.addImage({
@@ -251,19 +306,19 @@ export class CourseDetailComponent implements OnInit{
     });
 
     worksheet.addImage(imageId3, {
-      tl: { col: 7, row: 1 },
+      tl: { col: 7, row: 3 },
       ext: { width: 250, height: 75 }
     });
 
-    const imageId2 = workbook.addImage({
-      base64: myBase64Image,
-      extension: 'png',
-    });
+    // const imageId2 = workbook.addImage({
+    //   base64: myBase64Image,
+    //   extension: 'png',
+    // });
 
-    worksheet.addImage(imageId2, {
-      tl: { col: 3, row: 0 },
-      ext: { width: 130, height: 130 }
-    });
+    // worksheet.addImage(imageId2, {
+    //   tl: { col: 3, row: 10 },
+    //   ext: { width: 130, height: 130 }
+    // });
 
 
   
@@ -317,7 +372,7 @@ export class CourseDetailComponent implements OnInit{
 
     worksheet.addTable({
       name: 'MyTable',
-      ref: 'B14',
+      ref: 'B20',
       headerRow: true,
       totalsRow: false,
       style: {
@@ -339,9 +394,7 @@ export class CourseDetailComponent implements OnInit{
       rows: array
     });
 
-    console.log(array.length)
-
-    const nothingToFollow = worksheet.getCell('B'+(array.length+20));
+    const nothingToFollow = worksheet.getCell('B'+(array.length+30));
     nothingToFollow.value = '**************************************************************** nothing follows ****************************************************************'
     
     const graderangeImage = graderange;
@@ -352,88 +405,115 @@ export class CourseDetailComponent implements OnInit{
     });
 
     worksheet.addImage(imageId1, {
-      tl: { col: 1, row: 23+array.length },
+      tl: { col: 1, row: 33+array.length },
       ext: { width: 800, height: 75 }
     });
 
 
-    // PREPARED
-    worksheet.getCell('B'+(array.length+33)).value = 'PREPARED';
-    worksheet.mergeCells('B'+(array.length+34)+':D'+(array.length+34));
-    worksheet.getCell('B'+(array.length+34)).value =  this.creatorProfile.profile.name.fullName;
-    worksheet.mergeCells('B'+(array.length+35)+':D'+(array.length+35));
-    worksheet.getCell('B'+(array.length+35)).value = `Instructor's Professor's Signature`;
+    // // PREPARED
+    worksheet.getCell('B'+(array.length+43)).value = 'PREPARED';
+    worksheet.mergeCells('B'+(array.length+44)+':D'+(array.length+44));
+    worksheet.getCell('B'+(array.length+44)).value =  this.creatorProfile.profile.name.fullName;
+    worksheet.mergeCells('B'+(array.length+45)+':D'+(array.length+45));
+    worksheet.getCell('B'+(array.length+45)).value = `Instructor's Professor's Signature`;
 
-    worksheet.getCell('G'+(array.length+34)).value = 'MdT Date:'
-    worksheet.getCell('H'+(array.length+34)).border = {
+    worksheet.getCell('G'+(array.length+44)).value = 'MdT Date:'
+    worksheet.getCell('H'+(array.length+44)).border = {
       bottom: { style: 'thin'}
     }
-    worksheet.getCell('G'+(array.length+35)).value = 'FnT Date:'
-    worksheet.getCell('H'+(array.length+35)).border = {
+    worksheet.getCell('G'+(array.length+45)).value = 'FnT Date:'
+    worksheet.getCell('H'+(array.length+45)).border = {
       bottom: { style: 'thin'}
     }
 
-    worksheet.getCell('B'+(array.length+34)).alignment = {
+    worksheet.getCell('B'+(array.length+44)).alignment = {
       horizontal: 'center'
     }
-    worksheet.getCell('B'+(array.length+34)).border = {
+    worksheet.getCell('B'+(array.length+44)).border = {
       bottom: { style: 'thick'}
     }
-    worksheet.getCell('C'+(array.length+34)).border = {
+    worksheet.getCell('C'+(array.length+44)).border = {
       bottom: { style: 'thick'}
     } 
-    worksheet.getCell('D'+(array.length+34)).border = {
+    worksheet.getCell('D'+(array.length+44)).border = {
       bottom: { style: 'thick'}
     } 
 
 
-    // CHECKED AND VERIFIED
-    worksheet.getCell('B'+(array.length+37)).value = 'CHECKED AND VERIFIED';
-    worksheet.mergeCells('B'+(array.length+38)+':D'+(array.length+38));
-    worksheet.getCell('B'+(array.length+38)).value =  '';
+    // // CHECKED AND VERIFIED
+    worksheet.getCell('B'+(array.length+47)).value = 'CHECKED AND VERIFIED';
+    worksheet.mergeCells('B'+(array.length+48)+':D'+(array.length+48));
+    worksheet.getCell('B'+(array.length+48)).value =  '';
     //worksheet.mergeCells('B'+(array.length+29)+':D'+(array.length+29));
-    worksheet.getCell('B'+(array.length+39)).value = `Signature Over Program Chair's Printed Name`;
+    worksheet.getCell('B'+(array.length+49)).value = `Signature Over Program Chair's Printed Name`;
 
-    worksheet.getCell('G'+(array.length+38)).value = 'MdT Date:'
-    worksheet.getCell('H'+(array.length+38)).border = {
+    worksheet.getCell('G'+(array.length+48)).value = 'MdT Date:'
+    worksheet.getCell('H'+(array.length+48)).border = {
       bottom: { style: 'thin'}
     }
-    worksheet.getCell('G'+(array.length+39)).value = 'FnT Date:'
-    worksheet.getCell('H'+(array.length+39)).border = {
+    worksheet.getCell('G'+(array.length+49)).value = 'FnT Date:'
+    worksheet.getCell('H'+(array.length+49)).border = {
       bottom: { style: 'thin'}
     }
 
-    worksheet.getCell('B'+(array.length+38)).border = {
+    worksheet.getCell('B'+(array.length+48)).border = {
       bottom: { style: 'thick'}
     }
-    worksheet.getCell('C'+(array.length+38)).border = {
+    worksheet.getCell('C'+(array.length+48)).border = {
       bottom: { style: 'thick'}
     } 
-    worksheet.getCell('D'+(array.length+38)).border = {
+    worksheet.getCell('D'+(array.length+48)).border = {
       bottom: { style: 'thick'}
     } 
 
-    // RECEIVED
-    worksheet.getCell('B'+(array.length+41)).value = 'RECEIVED';
-    worksheet.mergeCells('B'+(array.length+42)+':D'+(array.length+42));
-    worksheet.getCell('B'+(array.length+42)).value =  '';
+    // // RECEIVED
+    worksheet.getCell('B'+(array.length+51)).value = 'RECEIVED';
+    worksheet.mergeCells('B'+(array.length+52)+':D'+(array.length+52));
+    worksheet.getCell('B'+(array.length+52)).value =  '';
     //worksheet.mergeCells('B'+(array.length+33)+':D'+(array.length+33));
-    worksheet.getCell('B'+(array.length+43)).value = `Signature Over Registrar's Printed Name`;
+    worksheet.getCell('B'+(array.length+53)).value = `Signature Over Registrar's Printed Name`;
 
-    worksheet.getCell('G'+(array.length+43)).value = 'Date:'
-    worksheet.getCell('H'+(array.length+43)).border = {
+    worksheet.getCell('G'+(array.length+53)).value = 'Date:'
+    worksheet.getCell('H'+(array.length+53)).border = {
       bottom: { style: 'thin'}
     }
 
-    worksheet.getCell('B'+(array.length+42)).border = {
+    worksheet.getCell('B'+(array.length+52)).border = {
       bottom: { style: 'thick'}
     }
-    worksheet.getCell('C'+(array.length+42)).border = {
+    worksheet.getCell('C'+(array.length+52)).border = {
       bottom: { style: 'thick'}
     } 
-    worksheet.getCell('D'+(array.length+42)).border = {
+    worksheet.getCell('D'+(array.length+52)).border = {
       bottom: { style: 'thick'}
     } 
+
+    // Footer
+
+    worksheet.mergeCells('B'+(array.length+58), 'K'+(array.length+58))
+    worksheet.getCell('B'+(array.length+58)).border = {
+      bottom: { style: 'thin'}
+    }
+
+    const slsuLogoWithText = workbook.addImage({
+      base64: slsustarrating,
+      extension: 'png',
+    });
+    worksheet.addImage(slsuLogoWithText, {
+      tl: { col: 6, row: array.length+59 },
+      ext: { width: 241, height: 93 }
+    });
+
+    const slsuIso = workbook.addImage({
+      base64: slsuiso,
+      extension: 'png',
+    });
+    worksheet.addImage(slsuIso, {
+      tl: { col: 9, row: array.length+59 },
+      ext: { width: 142, height: 93 }
+    });
+
+
 
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell((cell, colNumber) => {
@@ -463,100 +543,100 @@ export class CourseDetailComponent implements OnInit{
     columnK.width = 10;
 
 
-    worksheet.getCell('B14').border = {
+    worksheet.getCell('B20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('C14').border = {
+    worksheet.getCell('C20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('D14').border = {
+    worksheet.getCell('D20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('E14').border = {
+    worksheet.getCell('E20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('F14').border = {
+    worksheet.getCell('F20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('G14').border = {
+    worksheet.getCell('G20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('H14').border = {
+    worksheet.getCell('H20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('I14').border = {
+    worksheet.getCell('I20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('J14').border = {
+    worksheet.getCell('J20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
-    worksheet.getCell('K14').border = {
+    worksheet.getCell('K20').border = {
       top: {style:'thick'},
       bottom: {style:'thick'},
     };
 
     // font color blue
-    worksheet.getCell('B14').font = {
+    worksheet.getCell('B20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('C14').font = {
+    worksheet.getCell('C20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('D14').font = {
+    worksheet.getCell('D20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('E14').font = {
+    worksheet.getCell('E20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('F14').font = {
+    worksheet.getCell('F20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('G14').font = {
+    worksheet.getCell('G20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('H14').font = {
+    worksheet.getCell('H20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('I14').font = {
+    worksheet.getCell('I20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('J14').font = {
+    worksheet.getCell('J20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
-    worksheet.getCell('K14').font = {
+    worksheet.getCell('K20').font = {
       color: { argb: '305496'},
       size: 12,
       bold: true,
     }
 
-    worksheet.getCell('H12').font = {
+    worksheet.getCell('H22').font = {
       size: 12,
       bold: true,
     }
@@ -573,54 +653,88 @@ export class CourseDetailComponent implements OnInit{
       horizontal: 'center'
     }
 
-    worksheet.getCell('E5').alignment = {
+    worksheet.getCell('E4').alignment = {
       horizontal: 'center'
     }
 
-    worksheet.getCell('E6').alignment = {
+    worksheet.getCell('E15').alignment = {
       horizontal: 'center'
     }
 
-    worksheet.getCell('B'+(array.length+25)).alignment = {
+    worksheet.getCell('E16').alignment = {
       horizontal: 'center'
     }
 
-    worksheet.getCell('B'+(array.length+28)).alignment = {
+    worksheet.getCell('E11').alignment = {
+      horizontal: 'center'
+    }
+
+    worksheet.getCell('B'+(array.length+35)).alignment = {
+      horizontal: 'center'
+    }
+
+    worksheet.getCell('B'+(array.length+38)).alignment = {
       horizontal: 'center'
     }
     
-    worksheet.getCell('B'+(array.length+32)).alignment = {
+    worksheet.getCell('B'+(array.length+42)).alignment = {
       horizontal: 'center'
     }
 
-    worksheet.getCell('B'+(array.length+36)).alignment = {
+    worksheet.getCell('B'+(array.length+46)).alignment = {
       horizontal: 'center'
     }
 
-    const cellAddresses = ['E5','E6,', 'E2', 'B'+(array.length+23), 'B'+(array.length+27),'B'+(array.length+31),'B'+(array.length+35)];
+    const cellAddresses = ['E15','E16,', 'E12', 'B'+(array.length+33), 'B'+(array.length+37),'B'+(array.length+41),'B'+(array.length+45)];
 
     cellAddresses.forEach(address => {
       worksheet.getCell(address).font = {
         bold : true
       }
     });
+    // header style
+    // campusName.font = {
+    //   color: { argb: '305496'}
+    // }
+    // address.font = {
+    //   color: { argb: '305496'}
+    // }
+    // contact.font = {
+    //   color: { argb: '305496'}
+    // }
+    // site.font = {
+    //   color: { argb: '305496'}
+    // }
+    lastHeader.alignment = {
+      horizontal: 'center'
+    }
+    lastHeader.border = {
+      bottom: {style:'thin'}
+    }
+    lastHeader.font = {
+      size: 11
+    }
 
-    worksheet.getCell('B'+(array.length+20)).font = {
+
+    worksheet.getCell('B'+(array.length+30)).font = {
       color: { argb: '305496'}
     }
 
-    this._classRecordService.exportToExcel(workbook, this.courseName, this.gradeTable);
+    this._classRecordService.exportToExcel(workbook, classRecord , this.courseName, this.gradeTable,this.creatorProfile.profile.name.fullName);
+    //this._newClassRecord.exportNewRecord(workbook,newClassRecord, this.courseName, this.gradeTable,this.creatorProfile.profile.name.fullName);
 
     const stamp = this.getNameStamp();
 
-    // workbook.xlsx.writeBuffer().then((data: ArrayBuffer) => {
-    //   const blob = new Blob([data], { type: this.EXCEL_TYPE });
-    //   fs.saveAs(blob, `Class Record Export ${stamp}` + '.xlsx');
-    // });
     const options: XlsxWriteOptions = {
       base64: true,
     };
     
+    classRecord.views = [
+      {
+        showGridLines: false,
+      },
+    ]
+
     workbook.xlsx.writeBuffer(options).then((data: ArrayBuffer) => {
       const blob = new Blob([data], { type: this.EXCEL_TYPE });
       fs.saveAs(blob, `Class Record Export ${stamp}` + '.xlsx');

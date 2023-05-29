@@ -31,4 +31,8 @@ export class CourseService {
   getTeacherProfile(data:any,auth){
     return this.http.get(environment.googleAPIBaseUrl+ 'courses/'+data.courseId+'/teachers/'+data.creatorId+'?key='+auth.config.apiKey)
   }
+  
+  getCourseSectionDetail(data:any, auth){
+    return this.http.get(environment.googleAPIBaseUrl+ 'courses/'+data.courseId+'?key='+auth.config.apiKey)
+  }
 }

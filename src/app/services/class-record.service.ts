@@ -5,6 +5,7 @@ import { slsuBase64 } from '../../assets/slsuBase64';
 import { Grade } from 'src/app/model/Grade';
 import { WorkSheet } from 'xlsx';
 import {Grade_Range_Percentage, Grade_Range_Decimal} from 'src/app/model/GradeRange';
+import { slsulogowithtext } from '../../assets/slsulogowithtext';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,9 @@ export class ClassRecordService {
 
   constructor() { }
 
-  exportToExcel(workbook: ExcelJs.Workbook, courseName: string, gradeTable: Grade[]){
-    const worksheet = workbook.addWorksheet('Record',{properties:{tabColor:{argb:'FFFFFF'}},views:[{showGridLines:true}]});
+  exportToExcel(workbook: ExcelJs.Workbook, worksheet: ExcelJs.Worksheet, courseName: string, gradeTable: Grade[],instructorName){
+    
+    
     worksheet.properties.defaultColWidth = 4;
 
     worksheet.views = [
@@ -34,6 +36,8 @@ export class ClassRecordService {
       pattern: 'solid',
       fgColor: {argb: 'f8cbad'}
     }
+
+    
     
     worksheet.getRow(4).height = 70;
     worksheet.mergeCells('B4:C4');
@@ -52,7 +56,7 @@ export class ClassRecordService {
       fgColor: {argb: 'f8cbad'}
     }
 
-    worksheet.getRow(5).height = 70;
+    worksheet.getRow(5).height = 100;
     worksheet.mergeCells('B5:C5');
     const B5 = worksheet.getCell('B5');
     B5.value = courseName; 
@@ -134,7 +138,7 @@ export class ClassRecordService {
 
     worksheet.mergeCells('D2:E2');
     const D2E2 = worksheet.getCell('D2');
-    D2E2.value = '100.0%';
+    D2E2.value = '';
     D2E2.font = {
       bold: true
     }
@@ -151,7 +155,7 @@ export class ClassRecordService {
     worksheet.mergeCells(2,6,2,(6+(length-1)));
     // worksheet.mergeCells(2,34+midtermNameLength,2,36+midtermNameLength);
     const F2H2 = worksheet.getCell('F2');
-    F2H2.value = 'OK';
+    F2H2.value = '';
     F2H2.alignment = {
       horizontal: 'center'
     }
@@ -164,9 +168,12 @@ export class ClassRecordService {
       fgColor: {argb: 'c6e0b4'}
     }
 
+
+    
+
     worksheet.mergeCells(4,4,4,4+length);
     const D4 =worksheet.getCell('D4');
-    D4.value = 'Assignment/Quiz';
+    //D4.value = 'Assignment/Quiz';
     D4.alignment = {
       vertical: 'middle',
       horizontal: 'center'
@@ -204,7 +211,7 @@ export class ClassRecordService {
 
     worksheet.mergeCells(3,4,3,4+length);
     const D3 = worksheet.getCell('D3');
-    D3.value = '20%';
+    D3.value = '';
     D3.alignment = {
       horizontal: 'center'
     }
@@ -232,6 +239,25 @@ export class ClassRecordService {
         fgColor: {argb: 'f8cbad'}
       }
     }
+    //population for assignment names
+    gradeTable.forEach((element,index) => {
+      if (index == 0 ){
+        Object.keys(element.assignments).forEach((key,keyIndex)=>{
+          const elem: any = element.assignments[key];
+          const creationDate = new Date(elem.creationTime);
+          if (creationDate.getMonth()+1 <= 5 && creationDate.getMonth()+1 > 0){
+            console.log(element.assignments[key])
+            const assignment:any = element.assignments[key];
+            const title = assignment.courseWorkTitle
+            let x = worksheet.getCell(5,4+keyIndex);
+            x.value = title;
+            x.alignment = {
+              textRotation: 90
+            }
+          }
+        })
+      }
+    });
 
     // adjust base on length
     worksheet.mergeCells(3,(5+length),6,(5+length));
@@ -319,7 +345,7 @@ export class ClassRecordService {
     // ----------------------------------------------
     worksheet.mergeCells(3,10+length,3,13+length);
     let M3 = worksheet.getCell(3,10+length);
-    M3.value = '60%';
+    M3.value = '';
     M3.alignment = {
       horizontal: 'center'
     }
@@ -330,7 +356,7 @@ export class ClassRecordService {
     }
     worksheet.mergeCells(4,10+length,4,13+length);
     let M4 = worksheet.getCell(4,10+length);
-    M4.value = 'LAB Activities';
+    //M4.value = 'LAB Activities';
     M4.alignment = {
       horizontal: 'center',
       vertical: 'middle'
@@ -610,7 +636,7 @@ export class ClassRecordService {
       fgColor: {argb: 'ffe699'}
     }
 
-    worksheet.getCell(3,(28+length)).value = '###'
+    worksheet.getCell(3,(28+length)).value = ''
     worksheet.getCell(3,(28+length)).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -679,7 +705,7 @@ export class ClassRecordService {
 
     worksheet.mergeCells(2,6+length,2,31+length)
     let midTermText = worksheet.getCell(2,6+length);
-    midTermText.value = 'Mid Term';
+    midTermText.value = '';
     midTermText.alignment = {
       horizontal: 'center'
     }
@@ -690,14 +716,14 @@ export class ClassRecordService {
     }
 
     // ========= FINAL ========================================
-    this.createFinal(worksheet,courseName,gradeTable,length);
+    this.createFinal(workbook, worksheet,courseName,gradeTable,length,instructorName);
     // ========= END FINAL ====================================
 
     // when merging remember to consider the variable length
     // mergeCells(rownumber, row letter, column number, column letter)
   }
 
-  createFinal(worksheet: ExcelJs.Worksheet, courseName: string, gradeTable: Grade[], midtermNameLength){
+  createFinal(workbook: ExcelJs.Workbook,worksheet: ExcelJs.Worksheet, courseName: string, gradeTable: Grade[], midtermNameLength,instructorName){
 
     const final = this.getFinalAssignmentLength(gradeTable);
     
@@ -732,7 +758,7 @@ export class ClassRecordService {
         fgColor: { argb: 'c65911' },
       };
     }
-
+    // grid for table looks
     for (let i = 2; i <= 29+length; i++) {
       for (let j = 2; j <= 62+midtermNameLength+(final-3); j++) {
         const cell = worksheet.getCell(i,j);
@@ -745,15 +771,58 @@ export class ClassRecordService {
       }
     }
 
+    //Footer
+
+    const preparedLine = worksheet.getCell(37+length,3);
+    const prepared = worksheet.getCell(37+length,3);
+    const preparedPerson = worksheet.getCell(36+length,3)
+    preparedLine.border = {
+      top: { style: 'medium' }
+    }
+    prepared.value = 'Prepared By:';
+    prepared.alignment = {
+      horizontal: 'center',
+      vertical: 'middle'
+    }
+    preparedPerson.value = instructorName
+    preparedPerson.alignment = {
+      horizontal: 'center',
+      vertical: 'middle'
+    }
+    preparedPerson.font = {
+      size: 14
+    }
+
+    worksheet.mergeCells(36+length,32+midtermNameLength,36+length,42+midtermNameLength);
+    worksheet.mergeCells(37+length,32+midtermNameLength,37+length,42+midtermNameLength);
+    const noted = worksheet.getCell(36+length,32+midtermNameLength)
+    const notedLine = worksheet.getCell(37+length,32+midtermNameLength)
+    notedLine.border = {
+      top: { style: 'medium' }
+    }
+    notedLine.value = 'Noted By:';
+    notedLine.alignment = {
+      horizontal: 'center',
+      vertical: 'middle'
+    }
+    noted.value = ''
+    noted.alignment = {
+      horizontal: 'center',
+      vertical: 'middle'
+    }
+    noted.font = {
+      size: 14
+    }
+
     worksheet.mergeCells(1,1,1,63+midtermNameLength+(final-3))
-    worksheet.getRow(1).height = 25;
+    worksheet.getRow(1).height = 55;
 
     let A1 = worksheet.getCell('A1')
-    A1.value = "STUDENT'S RECORD ENTRY FORM";
+    A1.value = "";
     A1.fill = {
       type: 'pattern',
       pattern: 'solid',
-      fgColor: {argb: '5b9bd5'}
+      fgColor: {argb: 'ffffff'}
     }
     A1.font = {
       size: 18,
@@ -768,7 +837,7 @@ export class ClassRecordService {
     // FINAL STARTS AT 32 + midtermNameLength
     worksheet.mergeCells(2,32+midtermNameLength,2,33+midtermNameLength);
     let AI2 = worksheet.getCell(2,32+midtermNameLength);
-    AI2.value = '100.0%';
+    AI2.value = '';
     AI2.font = {
       bold: true
     }
@@ -783,7 +852,7 @@ export class ClassRecordService {
     const maxCol = minCol+final -1; 
     worksheet.mergeCells(row, minCol, row, maxCol);
     let AK2 = worksheet.getCell(2, minCol);
-    AK2.value = 'OK';
+    AK2.value = '';
     AK2.alignment = {
       horizontal: 'center'
     }
@@ -804,7 +873,7 @@ export class ClassRecordService {
     }
     worksheet.mergeCells(4,32+midtermNameLength,4,(32+midtermNameLength)+final);
     const AI4 =worksheet.getCell(4,32+midtermNameLength);
-    AI4.value = 'Quizzes';
+    //AI4.value = 'Quizzes';
     AI4.alignment = {
       vertical: 'middle',
       horizontal: 'center'
@@ -845,7 +914,7 @@ export class ClassRecordService {
         fgColor: {argb: 'f8cbad'}
       }
     }
-    
+    // here
     gradeTable.forEach((element, index) =>{
       const {grade,total} = this.getFinalTerm(element);
       const newgrade = [2,3,4];
@@ -854,7 +923,22 @@ export class ClassRecordService {
       })
 
       worksheet.getCell(8+index,32+midtermNameLength+final).value = total;
-      
+      if (index == 0 ){
+        Object.keys(element.assignments).forEach((key,keyIndex)=>{
+          const elem:any = element.assignments[key]
+          const creationDate = new Date(elem.creationTime);
+          if(creationDate.getMonth()+1 >= 6 && creationDate.getMonth()+1 < 13 ){
+            console.log(element.assignments[key])
+            const assignment:any = element.assignments[key];
+            const title = assignment.courseWorkTitle
+            let x = worksheet.getCell(5,(32+midtermNameLength)+keyIndex);
+            x.value = title;
+            x.alignment = {
+              textRotation: 90
+            }
+          }          
+        })
+      }
     });
     
     worksheet.mergeCells(6,(32+midtermNameLength)+final, 7,(32+midtermNameLength)+final)
@@ -961,7 +1045,7 @@ export class ClassRecordService {
     }
     worksheet.mergeCells(4,(38+midtermNameLength)+final,4,(41+midtermNameLength)+final);
     let M4 = worksheet.getCell(4,(38+midtermNameLength)+final);
-    M4.value = 'Discussion';
+    //M4.value = 'Discussion';
     M4.alignment = {
       horizontal: 'center',
       vertical: 'middle'
@@ -1047,7 +1131,7 @@ export class ClassRecordService {
     }
     worksheet.mergeCells(4,(43+midtermNameLength)+final,4,(46+midtermNameLength)+final);
     let AW4 = worksheet.getCell(4,(43+midtermNameLength)+final);
-    AW4.value = 'Project';
+    //AW4.value = 'Project';
     AW4.alignment = {
       horizontal: 'center',
       vertical: 'middle'
@@ -1247,7 +1331,7 @@ export class ClassRecordService {
       fgColor: {argb: 'ffe699'}
     }
 
-    worksheet.getCell(3,(56+midtermNameLength)+final).value = '###'
+    worksheet.getCell(3,(56+midtermNameLength)+final).value = ''
     worksheet.getCell(3,(56+midtermNameLength)+final).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -1316,11 +1400,20 @@ export class ClassRecordService {
       worksheet.getCell(8+index,(59+midtermNameLength)+final).value = rate;
     })
 
+    const slsuheader = workbook.addImage({
+      base64: slsulogowithtext,
+      extension: 'png',
+    });
+    worksheet.addImage(slsuheader, {
+      tl: { col: 18+midtermNameLength+(Math.trunc(final/2)), row: 0 },
+      ext: { width: 285, height: 77 }
+    });
+
     worksheet.getColumn(AH4.col).width = 6;
 
     worksheet.mergeCells(2,minCol+final,2,(59+midtermNameLength)+final)
     let finalTermText = worksheet.getCell(2,minCol+final);
-    finalTermText.value = 'Final Term';
+    finalTermText.value = '';
     finalTermText.alignment = {
       horizontal: 'center'
     }

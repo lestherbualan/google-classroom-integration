@@ -9,10 +9,10 @@
             <svg cIcon class="me-2" name="cilExternalLink"></svg>
             Export
           </button>
-          <button (click)="ivkPrint()" cButton color="primary" [disabled]="gradeLoading">
+          <!-- <button (click)="ivkPrint()" cButton color="primary" [disabled]="gradeLoading">
             <svg cIcon class="me-2" name="cilPrint"></svg>
             Print
-          </button>
+          </button> -->
           <!-- <button (click)="test()" cButton color="success" [disabled]="gradeLoading">
             <svg cIcon class="me-2" name="cilPrint"></svg>
             Test
@@ -46,9 +46,9 @@
               <!-- No middle name available from google classroom data -->
               <td></td>
               <!-- No Course available from google classroom data -->
-              <td></td>
+              <td>BSIT</td>
               <!-- No Year and Section available from google classroom data -->
-              <td></td>
+              <td>{{this.section}}</td>
               <!-- MidTerm Here ! -->              
               <td>
                 {{getMidterm(student)}}

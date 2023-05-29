@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+
 import {
   PERFECT_SCROLLBAR_CONFIG,
   PerfectScrollbarConfigInterface,
@@ -45,6 +46,7 @@ import {
   UtilitiesModule,
   SpinnerModule,
   TableModule,
+  CalloutModule 
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
@@ -101,6 +103,7 @@ const APP_CONTAINERS = [
     HttpClientModule,
     SpinnerModule,
     TableModule,
+    CalloutModule,
     StoreModule.forRoot({authUser: authUserReducer})
   ],
   providers: [

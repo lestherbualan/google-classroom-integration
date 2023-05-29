@@ -12,9 +12,11 @@ export class DefaultLayoutComponent implements OnInit {
 
   public navItems = navItems;
 
+
   public perfectScrollbarConfig = {
     suppressScrollX: true,
   };
+  isVisible: boolean = true;
 
   User:any;
 
@@ -22,5 +24,11 @@ export class DefaultLayoutComponent implements OnInit {
   
   ngOnInit(): void {
 
+  }
+  toggle(){
+    if(this.isVisible == false){
+      this.isVisible = true
+    }
+    this.isVisible = false;
   }
 }

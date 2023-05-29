@@ -37,10 +37,12 @@ export class LoginComponent implements OnInit{
     // }else{
     //   this.login();
     // }
+    //this.login();
     
   }
 
   async login(){
+
     this.authService.login(scopes);
 
     // const creds = await signInWithRedirect(firebaseAuth,provider).then( (result)=>{

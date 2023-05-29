@@ -5,54 +5,18 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm>
-                <h1>Login</h1>
-                <p class="text-medium-emphasis">Sign In to your account</p>
-                <c-input-group class="mb-3">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilUser"></svg>
-                  </span>
-                  <input autoComplete="username" cFormControl placeholder="Username" disabled/>
-                </c-input-group>
-                <c-input-group class="mb-4">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilLockLocked"></svg>
-                  </span>
-                  <input
-                    autoComplete="current-password"
-                    cFormControl
-                    placeholder="Password"
-                    type="password"
-                    disabled
-                  />
-                </c-input-group>
-                <c-row>
-                  <c-col xs="12">
-                    <button cButton class="px-4 google-button" color="light" (click)="login()">
-                      <svg cIcon
-                        name="cibGoogle"
-                        size="lg"
-                      style="margin-right: 5px;"></svg>
-                      Sign in with Google
-                    </button>
-                    <!-- <button cButton class="px-4" color="primary" (click)="check()">
-                      Check
-                    </button>
-                    <button cButton class="px-4" color="primary" (click)="logout()">
-                      logout
-                    </button>
-                    <button cButton class="px-4" color="primary" (click)="test()">
-                      Test Request
-                    </button>
-                    <button cButton class="px-4" color="primary" (click)="getClass()">
-                      Test Get Class Request
-                    </button> -->
+              <form cForm class="d-flex flex-column h-100">
+                <c-row class="flex-grow-1">
+                  <img src="https://www.southernleytestateu.edu.ph/images/2022/Logo_-_Blue.png" alt="">
+                  <p style="font-size: 25px; text-align: center ;">Automated Class Record</p>
+                  <c-col xs="12" class="d-flex align-items-center">
+                    <div class="d-flex justify-content-center flex-grow-1">
+                      <button cButton class="px-4 google-button" color="light" (click)="login()">
+                        <svg cIcon name="cibGoogle" size="lg" style="margin-right: 5px;"></svg>
+                        Sign in with Google
+                      </button>
+                    </div>
                   </c-col>
-                  <!-- <c-col class="text-right" xs="6">
-                    <button cButton class="px-0" color="link">
-                      Forgot password?
-                    </button>
-                  </c-col> -->
                 </c-row>
               </form>
             </c-card-body>

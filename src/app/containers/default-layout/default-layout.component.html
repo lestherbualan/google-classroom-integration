@@ -29,15 +29,30 @@
     >
     </c-sidebar-nav>
 
+
   </perfect-scrollbar>
   <!-- <div>
     hello hero
   </div> -->
-  <c-sidebar-toggler
+  <c-callout color="primary" class="m-2" *ngIf="isVisible">
+    Note:
+    Before you login to the system, make sure that all the students
+    follow the steps below in making their email account.
+
+    First it should be Surname, Second the First Name and Third
+    the Middle Name
+  </c-callout>
+  <c-callout color="primary" class="m-2" *ngIf="isVisible">
+    Note:
+    In making another activity, the teacher must fill up all the form
+    that Google Classroom needed
+  </c-callout>
+  <!-- <c-sidebar-toggler
     *ngIf="!sidebar.narrow"
     toggle="unfoldable"
     cSidebarToggle="sidebar"
-  ></c-sidebar-toggler>
+    (click)="toggle()"
+  ></c-sidebar-toggler> -->
 </c-sidebar>
 
 <!--main-->
